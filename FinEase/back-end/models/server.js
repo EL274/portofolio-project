@@ -11,12 +11,9 @@ app.use(cors());
 app.use(express.json());
 
 // Connexion à MongoDB
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Connecté à MongoDB'))
-  .catch(err => {
-    console.error('Erreur de connexion à MongoDB:', err.message);
-    console.error('Stack Trace:', err.stack);
-  });
+  .catch(err => console.error('Erreur de connexion à MongoDB:', err));
 
 // Routes
 app.get('/', (req, res) => {
