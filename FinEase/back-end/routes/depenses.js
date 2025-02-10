@@ -12,3 +12,15 @@ router.post('/', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
+
+// get all of depenses of user
+router.get('/:user_id', async (req, res) => {
+    try {
+        const depenses = await Depense.find({user_id: req.params.user_id});
+        res.json(depenses);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
+module.exports = router;
