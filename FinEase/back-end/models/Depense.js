@@ -6,3 +6,5 @@ const DepenseSchema = new mongoose.Schema({
     date: { type: Date, default: Date.now },
     utilisateur_id: { type: String, required: true }
 });
+
+module.exports =  mongoose.model('Depense', DepenseSchema);
