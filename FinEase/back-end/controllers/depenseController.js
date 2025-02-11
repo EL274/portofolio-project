@@ -10,3 +10,12 @@ exports.ajourterDepense = async (req, res) => {
         res.status(500).json({ message: err.message});
     }
 };
+
+exports.obtenirDepenses = async (req, res) => {
+    try {
+        const depense = await Depense.find({ user_id: req.params.user_id});
+        res.json(depenses);
+    } catch (err) {
+        req.status(500).json({ message: err.message });
+    }
+};
