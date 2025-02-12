@@ -24,3 +24,5 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Serveur en écoute sur le port ${PORT}`);
 });
+
+app.use('/api/catégories', require('./'))
