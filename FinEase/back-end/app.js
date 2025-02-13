@@ -19,3 +19,5 @@ mongoose.connect(process.env.MONGO_URI, { userNewUrlParser: true, useUnifieldTop
  app.use('/api/depense', require('./routes/depenses'))
  app.use('/api/objectifs', require('./routes/objectifs'))
  app.use('/api/users', require('./routes/users'))
+
+ module.exports = app;
