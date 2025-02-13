@@ -4,6 +4,6 @@ const ObjectifSchema = new mongoose.Schema({
     description: { type: String, required: true },
     montant: { type: number, required: true },
     montantAtteint: { type: number, required: default: 0 },
-    
+      
 })
 
