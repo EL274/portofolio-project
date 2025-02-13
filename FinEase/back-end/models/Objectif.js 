@@ -1,1 +1,8 @@
-const mongoose = req
+const mongoose = require('mongoose');
+
+const ObjectifSchema = new mongoose.Schema({
+    description: { type: String, required: true },
+    montant: { type: number, required: true },
+    
+})
+
