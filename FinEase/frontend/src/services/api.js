@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { response } from '../../../back-end/app';
+
 const API_URL = 'http://localhost:5000/api'; 
 
 export const getDepenses = async () => {
