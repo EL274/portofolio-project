@@ -7,7 +7,7 @@ import UsersPage from './pages/UsersPage';
 import CategoriesPage from './pages/Categories'; 
 import ConseilsPage from './pages/Conseils';
 import ObjectifsPage from './pages/Objectifs';
-import loginPage from './pages/login';
+import LoginPage from './pages/login';
 import RegisterPage from './pages/Auth/RegisterPage';
 
 function App() {
