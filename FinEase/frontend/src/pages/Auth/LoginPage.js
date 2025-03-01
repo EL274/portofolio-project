@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { login } from '../services/api';
 
-const loginPage = () => {
+const LoginPage = () => {
     const [email, setEmail] = userState('');
 
     const handleSubmit = async (e) => {
