@@ -12,3 +12,8 @@ export const createDepense = async (depenseData) => {
     const reponse = await axios.post(`${API_URL}/depenses`, depenseData);
     return response.data;
 };
+
+export const login = async (credentials) => {
+    const response = await axios.post(`${API_URL}/auth/login`, credentials);
+    return response.data;
+};
