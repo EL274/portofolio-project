@@ -15,5 +15,5 @@ export const createDepense = async (depenseData) => {
 
 export const login = async (credentials) => {
     const response = await axios.post(`${API_URL}/auth/login`, credentials);
-    return response.data;
+    return response.data; // Retourne les données de l'utilisateur ou un token 
 };
