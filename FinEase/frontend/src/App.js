@@ -7,7 +7,7 @@ import UsersPage from './pages/UsersPage';
 import CategoriesPage from './pages/Categories'; 
 import ConseilsPage from './pages/Conseils';
 import ObjectifsPage from './pages/Objectifs';
-import LoginPage from './pages/login';
+import LoginPage from './pages/Auth/LoginPage';
 import RegisterPage from './pages/Auth/RegisterPage';
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
             <Route path="/categories" element={<CategoriesPage />} />
             <Route path="/conseils" element={<ConseilsPage />} />
             <Route path="/objectifs" element={<ObjectifsPage/>} />
-            <Route path="/login" element={<loginPage />} />
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
           </Routes>
     </Router>
