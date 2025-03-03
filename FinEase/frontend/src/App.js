@@ -1,5 +1,4 @@
 import React from 'react';
-import DepenseList from './components/DepenseList';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import DepensesPage from './pages/DepensesPage';
