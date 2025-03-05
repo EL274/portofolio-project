@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -17,8 +18,8 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 
  //Routes
  app.use('/api/depenses', require('./routes/depenses'));
- app.use('/api/objectifs', require('./routes/objectifs'));
- app.use('/api/users', require('./routes/users'));
+ app.use('/api/objectifs', require('./routes/Objectifs'));
+ app.use('/api/users', require('./routes/Users'));
  app.use('/api/categories', require('./routes/catégories'));
  app.use('/api/conseils', require('./routes/conseils'));
 
