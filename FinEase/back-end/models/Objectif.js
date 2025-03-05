@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const objectifSchema = new mongoose.Schema({
+const ObjectifSchema = new mongoose.Schema({
     description: { type: String, required: true },
     montant: { type: Number, required: true },
     montantAtteint: { type: Number, required: true, default: 0 },
