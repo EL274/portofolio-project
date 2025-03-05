@@ -1,5 +1,5 @@
 const express = require('express');
-const Objectif = require('./models/Objectif');
+const Objectif = require('../models/Objectif');
 const router = express.Router();
 
 router.post('/', async (req, res) =>{
