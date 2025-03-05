@@ -24,7 +24,7 @@ router.get('/:user_id', async (req, res) => {
 })
 
 //supprimer un objectif
-router.delete('/:user_id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
         await Objectif.findByIdAndDelete(req.params.id);
         res.json({ message: 'Objectif supprime' });
