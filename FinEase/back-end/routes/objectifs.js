@@ -14,7 +14,7 @@ router.post('/', async (req, res) =>{
 });
 // Obtenir tous les objectifs d'un utilisateur
 
-router.get('/user_id', async (req, res) => {
+router.get('/:user_id', async (req, res) => {
     try {
         const objectifs = await Objectif.find({ user_id: req.params.user_id });
         res.json(objectifs);
@@ -24,9 +24,9 @@ router.get('/user_id', async (req, res) => {
 })
 
 //supprimer un objectif
-router.delete('/user_id', async (req, res) => {
+router.delete('/:user_id', async (req, res) => {
     try {
-        await Objectif.findIdAndDelete(req.params.id);
+        await Objectif.findByIdAndDelete(req.params.id);
         res.json({ message: 'Objectif supprime' });
     } catch (err) {
         res.status(500).json({ message: err.message });
