@@ -17,11 +17,11 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
  .catch((err) => console.error('Erreur de connexion à MongoDB:', err));
 
  //Routes
- app.use('/api/depenses', require('./routes/depenses'));
- app.use('/api/objectifs', require('./routes/Objectifs'));
- app.use('/api/users', require('./routes/Users'));
- app.use('/api/categories', require('./routes/catégories'));
- app.use('/api/conseils', require('./routes/conseils'));
+ app.use('/api/Depenses', require('./routes/Depenses'));
+ app.use('/api/Objectifs', require('./routes/Objectifs'));
+ app.use('/api/Users', require('./routes/Users'));
+ app.use('/api/Categories', require('./routes/Catégories'));
+ app.use('/api/Conseils', require('./routes/Conseils'));
 
  app.listen(PORT,  () => {
     console.log('Server is running on port ${PORT}');
