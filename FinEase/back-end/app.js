@@ -16,7 +16,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
  .catch((err) => console.error('Erreur de connexion à MongoDB:', err));
 
  //Routes
- app.use('/api/depense', require('./routes/depenses'));
+ app.use('/api/depenses', require('./routes/depenses'));
  app.use('/api/objectifs', require('./routes/objectifs'));
  app.use('/api/users', require('./routes/users'));
  app.use('/api/categories', require('./routes/catégories'));
