@@ -1,5 +1,5 @@
 const Depense = require('../models/Depense');
-const Objectif = required('../models/Objectif');
+const Objectif = require('../models/Objectif');
 
 const genererConseils = async (user_id) => {
     const conseils = [];
