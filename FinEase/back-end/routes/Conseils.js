@@ -1,5 +1,5 @@
 const express = require('express');
-const { genererConseils } = require('../service/conseilService');
+const { genererConseils } = require('../services/conseilService');
 const router  = express.Router();
 
 router.get ('/:user_id', async (req, res) => {
