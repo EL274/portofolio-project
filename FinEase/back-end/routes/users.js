@@ -3,12 +3,19 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
+const userSchema = Joi.object({
+  nom: Joi.string().required(),
+  email: Joi.string().required(),
+  motDepasse:Joi.string().min(6).required(),
+
+});
 
 //put your ID(inscription)
 router.post('/inscription', async (req, res) => {
   const { nom, email, motDepasse } = req.body;
   try {
-    const user = new User({ nom, email, motDepasse});
+    const hashedPassword = await bcrypt.hash(motDepasse, 10);
+    const user = new User({ nom, email, motDepasse: hashedPassword });
     await user.save();
     res.status(201).json({ message: 'User créé' });
   } catch (err) {
