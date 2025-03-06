@@ -53,5 +53,9 @@ router.post('/connexion', async (req, res) => {
   }
 });
 
+router.get('/', (req, res) => {
+  res.status(200).json({ message: 'Bienvenue sur FinEase'})
+});
+
 module.exports = router;
 
