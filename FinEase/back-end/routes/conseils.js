@@ -9,12 +9,13 @@ router.get ('/:user_id', async (req, res) => {
         if (!userId) {
             return res.status(400).json({ message: "L' ID user est requis."});
         }
-        
+
         console.log(`generer des conseils pour le user : ${userId}`);
 
-        const conseils = await genererConseils(req.params.user_id);
+        const conseils = await genererConseils(userId);
         res.json(conseils);
     } catch (err) {
+        console.error("Erreur lors de la generation des conseils :", err);
         res.status(500).json({ message: err.message });
     }
 });
