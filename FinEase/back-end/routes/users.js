@@ -15,6 +15,11 @@ const userSchema = Joi.object({
 router.post('/inscription', async (req, res) => {
   const { nom, email, motDepasse } = req.body;
   try {
+    const { error } = userSchema.validate({ nom, email, motDepasse });
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message })
+    }
+
     const hashedPassword = await bcrypt.hash(motDepasse, 10);
     const user = new User({ nom, email, motDepasse: hashedPassword });
     await user.save();
@@ -28,6 +33,12 @@ router.post('/inscription', async (req, res) => {
 router.post('/connexion', async (req, res) => {
   const { email, motDepasse } = req.body;
   try {
+
+    const {error} = userSchema.validate({ email, motDepasse });
+    if (error) {
+      return res.status(400).json({ message: error.details[0].message });
+    }
+
     const user = await User.findOne({ email });
     if (user && await bcrypt.compare(motDepasse, user.motDePasse)) {
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
