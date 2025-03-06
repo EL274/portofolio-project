@@ -14,9 +14,9 @@ router.post('/', async (req, res) =>{
 });
 // Obtenir tous les objectifs d'un utilisateur
 
-router.get('/:user_id', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
-        const objectifs = await Objectif.find({ user_id: req.params.user_id });
+        const objectifs = await Objectif.find;
         res.json(objectifs);
     } catch (err) { 
         res.status(500).json({ message: err.message });
