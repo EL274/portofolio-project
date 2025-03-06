@@ -2,12 +2,13 @@ const express =  require ('express');
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const Joi = require('Joi');
 const router = express.Router();
+
 const userSchema = Joi.object({
   nom: Joi.string().required(),
   email: Joi.string().required(),
   motDepasse:Joi.string().min(6).required(),
-
 });
 
 //put your ID(inscription)
