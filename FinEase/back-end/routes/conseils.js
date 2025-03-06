@@ -16,7 +16,7 @@ router.get ('/:user_id', async (req, res) => {
         res.json(conseils);
     } catch (err) {
         console.error("Erreur lors de la generation des conseils :", err);
-        res.status(500).json({ message: "Erreur interne du serveur." });
+        res.status(500).json({ message: err.message });
     }
 });
 
