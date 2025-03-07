@@ -16,7 +16,7 @@ router.post('/', async (req, res) =>{
 
 router.get('/', async (req, res) => {
     try {
-        const objectifs = await Objectif.find;
+        const objectifs = await Objectif.find();
         res.json(objectifs);
     } catch (err) { 
         res.status(500).json({ message: err.message });
