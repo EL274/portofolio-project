@@ -1,8 +1,21 @@
 const express = require('express');
 const Objectif = require('../models/Objectif');
+const Joi = require('joi')
 const router = express.Router();
 
+const objectifSchema = Joi.objectif({
+    description: Joi.string().required(),
+    montant: Joi.number().required(),
+    dateLimite: Joi.date().required(),
+    user_id: Joi.string().required(),
+});
+
 router.post('/', async (req, res) =>{
+    const{ error } = objectifSchema.validate(req.body);
+    if (error) {
+        return res.status(400).json({ message: error.details[0].message });
+    }
+
     const { description, montant, dateLimite, user_id } =req.body;
     try {
         const nouvelObjectif = new Objectif({ description, montant, dateLimite, user_id});
