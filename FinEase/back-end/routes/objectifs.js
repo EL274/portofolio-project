@@ -3,7 +3,7 @@ const Objectif = require('../models/Objectif');
 const Joi = require('joi')
 const router = express.Router();
 
-const objectifSchema = Joi.objectif({
+const objectifSchema = Joi.object({
     description: Joi.string().required(),
     montant: Joi.number().required(),
     dateLimite: Joi.date().required(),
