@@ -40,6 +40,9 @@ router.get('/', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         await Objectif.findByIdAndDelete(req.params.id);
+        if (!objectif) {
+            return res.status(404).json({ message: 'Objectif introuvable'})
+        }
         res.json({ message: 'Objectif supprime' });
     } catch (err) {
         res.status(500).json({ message: err.message });
