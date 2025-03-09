@@ -7,6 +7,7 @@ const Header = () => {
   const handlogout  = () => {
     setIsloggedin 
   }
+  const logoUrl = `${process.env.PUBLIC_URL}/images/Finease.png`;
   return (
     <header className="header">
       {/* Logo */}
