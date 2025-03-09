@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom'; // Pour la navigation
 import './Header.css'; // Fichier CSS pour les styles du header
-import { config } from '/config'
+
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Gère l'état de connexion
   const handlogout  = () => {
