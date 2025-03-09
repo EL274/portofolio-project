@@ -5,8 +5,9 @@ const HomePage = () => {
     return (
         <div>
             <Navbar/>
-            <h1>Bienvenue sur FinEase</h1>
-            <p>Une application revolutionnaire pour une gestion plus de votre budget</p>
+            <h1>Bienvenue sur FinEase</h1>  
+            <p>Your money, your power</p>
+            <bouton></bouton>
         </div>
     );
 };
