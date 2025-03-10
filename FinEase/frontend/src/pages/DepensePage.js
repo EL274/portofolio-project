@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { getDepenses } from '../services/api';
 import DepenseList from '../components/DepenseList';
 
+
 const DepensesPage = () => {
     const [depenses, setDepenses] = useState([]);
 
