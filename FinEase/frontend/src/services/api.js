@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import { getCategories, getDepenses } from  '../services/api';
 
 const API_URL = 'http://localhost:5000/api'; 
 
@@ -14,7 +14,7 @@ export const createDepense = async (depenseData) => {
 };
 
 export const login = async (credentials) => {
-    const response = await axios.post(`${API_URL}/auth/login`, credentials);
+    const response = await axios.post(`${API_URL}/Auth/Login`, credentials);
     return response.data; // Retourne les données de l'utilisateur ou un token 
 };
 
@@ -24,16 +24,21 @@ export const getUsers = async () => {
   };
 
   export const getObjectifs = async () => {
-    const response = await axios.get(`${API_URL}/objectifs`);
+    const response = await axios.get(`${API_URL}/Objectifs`);
     return response.data;
   };
 
   export const getConseils = async (userId) => {
     try {
-    const response = await axios.get(`${API_URL}/conseils/${userId}`);
+    const response = await axios.get(`${API_URL}/Conseils/${userId}`);
     return response.data;
   } catch (error) {
     console.error("Error lors de la récupération des conseils :", error);
     throw error;
   }
 };
+
+export const getCategories = async () => {
+    const response = await axios.get(`${API_URL}/Categories`);
+    return response.data;
+  };
