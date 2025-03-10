@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import api from '../services/api';
 
 const RegisterPage = () => {
     const [nom, setNom] = useState('');
