@@ -41,3 +41,9 @@ export const getCategories = async () => {
     const response = await axios.get(`${API_URL}/Categories`);
     return response.data;
   };
+
+  export const register = async (userData) => {
+    const response = await axios.post(`${API_URL}/Auth/Register`, userData);
+    return response.data;
+};
+

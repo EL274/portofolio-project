@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { register } from '../../services/api';  // Vérifie bien le chemin d'accès
 
 const RegisterPage = () => {
     const [nom, setNom] = useState('');
@@ -18,7 +19,7 @@ const RegisterPage = () => {
             <form onSubmit={handleSubmit}>
                 <input
                 type="text"
-                placeholder="Non"
+                placeholder="Nom"
                 value={nom}
                 onChange={(e) => setNom(e.target.value)}
                 />
