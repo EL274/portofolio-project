@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom'; // Pour la navigation
 import './Header.css'; // Fichier CSS pour les styles du header
 import { useNavigate } from 'react-router-dom';
