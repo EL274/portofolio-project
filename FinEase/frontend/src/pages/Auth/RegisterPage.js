@@ -10,7 +10,7 @@ const RegisterPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try{
+        try {
         const user = await register({ nom, email, password });
         if (user) {
            navigate('/login') //Rediriger vers la page de connexion ou le tableau de bord
