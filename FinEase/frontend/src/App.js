@@ -5,8 +5,8 @@ import HomePage from './pages/HomePage';
 import DepensesPage from './pages/DepensesPage';
 import UsersPage from './pages/UsersPage';
 import Categories from './pages/Categories'; 
-import ConseilsPage from './pages/ConseilsPage';
-import ObjectifsPage from './pages/ObjectifsPage';
+import ConseilsPage from './pages/Conseils';
+import ObjectifsPage from './pages/Objectifs';
 import LoginPage from './pages/Auth/LoginPage';
 import RegisterPage from './pages/Auth/RegisterPage';
 
