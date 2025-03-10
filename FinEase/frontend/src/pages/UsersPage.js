@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { getUsers } from '../services/api';
 
-const userPage = () => {
+const UserPage = () => {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
