@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
 import { register } from '../../services/api';  // Vérifie bien le chemin d'accès
+import { useNavigate } from 'react-router-dom';
 
 const RegisterPage = () => {
+    const navigate = useNavigate();
     const [nom, setNom] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        try{
         const user = await register({ nom, email, password });
         if (user) {
-            //Rediriger vers la page de connexion ou le tableau de bord
+           navigate('/login') //Rediriger vers la page de connexion ou le tableau de bord
         }
-    };
+    } catch (error) {
+        console. error("Errorlors del'inscription :", error)
+    }
+};
     return (
         <div>
             <h2>Inscription</h2>
