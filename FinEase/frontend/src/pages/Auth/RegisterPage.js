@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { registrer } from '../services/api';
+import { register } from '../services/api';
 
 const RegisterPage = () => {
     const [nom, setNom] = useState('');
@@ -8,7 +8,7 @@ const RegisterPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const user = await registrer({ nom, email, password });
+        const user = await register({ nom, email, password });
         if (user) {
             //Rediriger vers la page de connexion ou le tableau de bord
         }
@@ -20,7 +20,7 @@ const RegisterPage = () => {
                 <input
                 type="text"
                 placeholder="Non"
-                value={non}
+                value={nom}
                 onChange={(e) => setNom(e.target.value)}
                 />
                 <input

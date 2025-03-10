@@ -14,7 +14,7 @@ const DepensesPage = () => {
             console.error("Erreur lors de la récupération des dépenses :", error);
         }
     };
-        fectchDepenses();
+        fetchDepenses();
     }, []);
     
     return (

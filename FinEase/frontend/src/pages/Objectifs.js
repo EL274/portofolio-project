@@ -5,7 +5,7 @@ const ObjectifsPage = () => {
     const  [objectifs, setObjectifs] =useState([]);
 
     useEffect(() => {
-        const fetchObjectis = async () => {
+        const fetchObjectifs = async () => {
             const data = await getObjectifs();
             setObjectifs(data);
         };

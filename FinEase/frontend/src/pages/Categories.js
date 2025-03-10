@@ -1,7 +1,7 @@
 import  React, { useEffect, useState } from 'react';
 import  { getCategories } from '../services/api';
 
-const CategoriesPage = () => {
+const Categories = () => {
     const [categories, setCategories] = useState([]);
 
     useEffect(() => {
@@ -25,4 +25,4 @@ const CategoriesPage = () => {
     );
 };
 
-export default CategoriesPage;
+export default Categories;

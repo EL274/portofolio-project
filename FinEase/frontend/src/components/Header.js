@@ -1,12 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Pour la navigation
+import { Link, Navigate } from 'react-router-dom'; // Pour la navigation
 import './Header.css'; // Fichier CSS pour les styles du header
+import { useNavigate } from 'react-router-dom';
+
 
 const Header = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Gère l'état de connexion
-  const handlogout  = () => {
-    setIsloggedin 
-  }
+  const navigate = useNavigate();
+  const handleLogout  = () => {
+    setIsLoggedIn(false);
+    navigate('/login');
+  };
+
+  
   return (
     <header className="header">
       {/* Logo */}
@@ -29,9 +35,9 @@ const Header = () => {
           <li className="nav-item">
             <Link to="/depenses" className="nav-link">Dépenses</Link>
           </li>
-          {isloggedIn? (
+          {isLoggedIn? (
             <li className="nav-item">
-                <link to ="/profil" className="nav-link">Profil</link>
+                <Link to ="/profil" className="nav-link">Profil</Link>
                 </li>
           ):(
     
@@ -41,7 +47,7 @@ const Header = () => {
           )}
         </ul>
       </nav>
-      {/*...*/}
+      {/* Bouton de déconnexion */}
       {isLoggedIn && (
       <button onClick={handleLogout} className="logout-button">
         Déconnexion
