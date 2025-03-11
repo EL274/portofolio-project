@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth');
 
-// 🔐 Authentification
+//  Authentification
 router.post('/register', async (req, res) => {
     try {
         const { nom, email, password } = req.body;
@@ -40,7 +40,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// 🏦 Gestion des Dépenses
+// Gestion des Dépenses
 router.get('/depenses', auth, async (req, res) => {
     const depenses = await Depense.find({ utilisateur: req.user.id }).populate('categorie');
     res.json(depenses);
