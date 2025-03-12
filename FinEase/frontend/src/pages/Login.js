@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../services/api'; // Importez l'instance centralisée
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -10,7 +10,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:5000/api/login', { email, password });
+      const res = await api.post('/login', { email, password }); // Utilisez l'instance centralisée
       localStorage.setItem('token', res.data.token);
       navigate('/dashboard');
     } catch (error) {

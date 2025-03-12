@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../services/api'; // Importez l'instance centralisée
 
 const Dashboard = () => {
   const [depenses, setDepenses] = useState([]);
@@ -7,10 +7,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchDepenses = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/depenses', {
-          headers: { 'x-auth-token': token },
-        });
+        const res = await api.get('/depenses'); // Utilisez l'instance centralisée
         setDepenses(res.data);
       } catch (error) {
         console.error(error);

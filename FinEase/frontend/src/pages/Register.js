@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../services/api'; // Importez l'instance centralisée
 
 const Register = () => {
   const [nom, setNom] = useState('');
@@ -11,7 +11,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/register', { nom, email, password });
+      await api.post('/register', { nom, email, password }); // Utilisez l'instance centralisée
       navigate('/login');
     } catch (error) {
       console.error(error);

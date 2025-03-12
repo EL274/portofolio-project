@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import api from '../services/api'; // Importez l'instance centralisée
 
 const AddDepense = () => {
   const [nom, setNom] = useState('');
@@ -11,12 +11,7 @@ const AddDepense = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
-      await axios.post(
-        'http://localhost:5000/api/depenses',
-        { nom, montant, categorie },
-        { headers: { 'x-auth-token': token } }
-      );
+      await api.post('/depenses', { nom, montant, categorie }); // Utilisez l'instance centralisée
       navigate('/dashboard');
     } catch (error) {
       console.error(error);
