@@ -35,5 +35,5 @@ Avant de commencer, assurez-vous d'avoir installé :
 
 1. Clonez ce dépôt :
    ```bash
-   git clone https://github.com/votre-utilisateur/finease-frontend.git
-   cd finease-frontend
+   git clone https://github.com/EL274/portofolio-project/FinEase/frontend.git
+   cd frontend
