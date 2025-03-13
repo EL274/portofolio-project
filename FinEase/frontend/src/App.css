@@ -47,7 +47,7 @@ body {
 .content {
   position: relative;
   z-index: 1;
-  color: white; /* Exemple de style pour le texte */
+  color: rgb(228, 222, 222); /* Exemple de style pour le texte */
   text-align: center;
   margin-top: 20%;
 }
