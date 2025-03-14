@@ -8,7 +8,7 @@ const { sendBudgetAlertEmail } = require('../services/emailService'); // Ajout p
 const router = express.Router();
 
 /**
- * ✅ Récupérer le budget d'un utilisateur
+ *  Récupérer le budget d'un utilisateur
  */
 router.get('/', authMiddleware, async (req, res) => {
     try {
@@ -22,7 +22,7 @@ router.get('/', authMiddleware, async (req, res) => {
 });
 
 /**
- * ✅ Mettre à jour le budget global et gérer les alertes
+ *  Mettre à jour le budget global et gérer les alertes
  */
 router.put('/', authMiddleware, async (req, res) => {
     try {
@@ -46,7 +46,7 @@ router.put('/', authMiddleware, async (req, res) => {
 });
 
 /**
- * ✅ Vérification si l'utilisateur dépasse son budget
+ *  Vérification si l'utilisateur dépasse son budget
  */
 const checkBudgetExceeded = async (userId, email) => {
     try {
@@ -58,13 +58,13 @@ const checkBudgetExceeded = async (userId, email) => {
         const budget = await Budget.findOne({ userId });
 
         if (budget && totalDepenses > budget.totalBudget) {
-            // ✅ Ajout d'une notification en base de données
+            //  Ajout d'une notification en base de données
             await new Notification({
                 userId,
                 message: `⚠️ Vous avez dépassé votre budget mensuel !`
             }).save();
 
-            // ✅ Envoi d'un email d'alerte
+            //  Envoi d'un email d'alerte
             await sendBudgetAlertEmail(email, `Vous avez dépassé votre budget de ${totalDepenses - budget.totalBudget} € !`);
         }
     } catch (error) {
