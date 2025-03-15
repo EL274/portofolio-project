@@ -6,20 +6,20 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 
 // import routes 
-const authRoutes = require('./routes/auth');
+const authRoutes = require('./routes/authRotes');
 const  transactionRoutes = require('./routes/transactionRoutes.js');
 const budgetRoutes = require('./routes/budgetRoutes');
 
-const app = express
+const app = express();
 
 //middlewares
 app.use(express.json());
-app.use(cors);
+app.use(cors( ));
 app.use(cookieParser());
 app.use(morgan('dev'));
 
 //connexion à MongoDB
-mongoose.connect(process.env.MONGO_URI,{ useNewUrlParser: true, useUnifieldTopology: true })
+mongoose.connect(process.env.MONGO_URI,{ useNewUrlParser: true, useUnifiedTopology: true })
    .then (() => console.log("Connecté à MongoDB"))
    .catch(err => console.error("Erreur de connexion à MongoDB:", err));
 
