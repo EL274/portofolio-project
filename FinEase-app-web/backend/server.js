@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 
 // import routes 
-const authRoutes = require('./routes/authRotes');
+const authRoutes = require('./routes/authRoutes');
 const  transactionRoutes = require('./routes/transactionRoutes.js');
 const budgetRoutes = require('./routes/budgetRoutes');
 
