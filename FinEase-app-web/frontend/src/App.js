@@ -10,12 +10,18 @@ import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+import Profile from '.pages/Profile';
+import Settings from './pages/Settings';
+
 
 function App() {
+  const location = useLocation();
   return (
-    <>
+    <AnimatePresence>
       <Navbar />
-      <Routes>
+      <Routes location= {location} key= {location.pathname}>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -24,9 +30,11 @@ function App() {
         <Route path="/budgets" element={<Budgets />} />
         <Route path="/reports" element={<Reports />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/settings" element={<Settings />} />
       </Routes>
       <Footer />
-    </>
+    </AnimatePresence>
   );
 }
 
