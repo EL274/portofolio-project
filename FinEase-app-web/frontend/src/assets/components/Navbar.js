@@ -1,7 +1,8 @@
-import React, { useState, useContext } from 'react'; // Ajout de `useContext`
-import { Link } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import { AuthContext } from '../context/AuthContext';
+import FineaseLogo from '../assets/Finease.png'; // Assurez-vous que cette image est bien dans `src/assets/`
 
 const NavbarContainer = styled.nav`
   display: flex;
@@ -26,7 +27,7 @@ const NavLinks = styled.div`
   align-items: center;
 
   @media (max-width: 768px) {
-    display: ${({ open }) => (open ? 'flex' : 'none')}; /* Correction */
+    display: ${({ open }) => (open ? 'flex' : 'none')};
     flex-direction: column;
     position: absolute;
     top: 60px;
@@ -34,6 +35,7 @@ const NavLinks = styled.div`
     background: rgba(0, 0, 0, 0.9);
     width: 100%;
     padding: 20px 0;
+    width: 100%;
   }
 `;
 
@@ -52,11 +54,11 @@ const NavLink = styled(Link)`
 const MenuIcon = styled.div`
   display: none;
   cursor: pointer;
+  font-size: 24px;
+  color: white;
 
   @media (max-width: 768px) {
     display: block;
-    font-size: 24px;
-    color: white;
   }
 `;
 
@@ -77,13 +79,19 @@ const Button = styled.button`
 `;
 
 const Navbar = () => {
-  const { user, logout } = useContext(AuthContext); // Utilisation correcte du contexte
+  const { user, logout } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+
+  // Fermer le menu lors du changement de page
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location]);
 
   return (
     <NavbarContainer>
       <Link to="/">
-        <Logo src="/assets/Finease.png" alt="FinEase Logo" />
+        <Logo src={FineaseLogo} alt="FinEase Logo" />
       </Link>
 
       <MenuIcon onClick={() => setMenuOpen(!menuOpen)}>☰</MenuIcon>
@@ -99,7 +107,7 @@ const Navbar = () => {
         )}
 
         {user ? (
-          <Button onClick={logout}>Déconnexion</Button>
+          <Button onClick={() => logout && logout()}>Déconnexion</Button>
         ) : (
           <NavLink to="/login">
             <Button>Connexion</Button>
