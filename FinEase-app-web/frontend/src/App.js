@@ -10,7 +10,6 @@ import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import Profile from '.pages/Profile';
 import Settings from './pages/Settings';
