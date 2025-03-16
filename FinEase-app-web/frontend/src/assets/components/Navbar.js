@@ -1,14 +1,13 @@
-import React, { useState} from 'react';
+import React, { useState, useContext } from 'react'; // Ajout de `useContext`
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { AuthContext } from '../context/AuthContext';
-
 
 const NavbarContainer = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
+  padding: 15px;
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(10px);
   position: fixed;
@@ -27,7 +26,7 @@ const NavLinks = styled.div`
   align-items: center;
 
   @media (max-width: 768px) {
-    display: ${(props) => (props.open ? 'flex' : 'none')};
+    display: ${({ open }) => (open ? 'flex' : 'none')}; /* Correction */
     flex-direction: column;
     position: absolute;
     top: 60px;
@@ -78,7 +77,7 @@ const Button = styled.button`
 `;
 
 const Navbar = () => {
-  const { user, logout } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext); // Utilisation correcte du contexte
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -95,7 +94,7 @@ const Navbar = () => {
             <NavLink to="/dashboard">Dashboard</NavLink>
             <NavLink to="/transactions">Transactions</NavLink>
             <NavLink to="/budgets">Budgets</NavLink>
-            <NavLink to="/profile">Mon Profile</NavLink>
+            <NavLink to="/profile">Mon Profil</NavLink>
           </>
         )}
 
