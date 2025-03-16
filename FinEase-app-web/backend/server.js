@@ -4,14 +4,14 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
-const connectDB = require('./db');
+
 
 
 // import routes 
 const authRoutes = require('./routes/authRoutes');
 const  transactionRoutes = require('./routes/transactionRoutes.js');
 const budgetRoutes = require('./routes/budgetRoutes');
-
+const connectDB = require('./db');
 const app = express();
 
 //middlewares
@@ -34,6 +34,6 @@ app.use('/api/budgets', budgetRoutes);
 // Démarrage du serveur
 const PORT = process.env.PORT || 5000;
 app.get('/', (req, res) => {
-   res.send("Bienvenue sur l'API FinEase ");
+   res.send("Bienvenue sur FinEase ");
 });
-app.listen(PORT, () => console.log(` Serveur lancé sur http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`Serveur lancé sur http://localhost:${PORT}`));
