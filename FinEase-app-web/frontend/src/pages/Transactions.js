@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import { FinanceContext } from '../context/FinanceContext';
 import { motion } from 'framer-motion';
-import AddTransactionForm  from '../components/AddTransactionForm'
+import AddTransactionForm  from '../components/AddTransactionForm';
 import { exportCSV, exportPDF } from '.../services/exportService';
 import { getTransactions, deleteTransaction } from '../services/api';
 

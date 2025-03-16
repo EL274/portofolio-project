@@ -11,7 +11,7 @@ import Settings from './pages/Settings';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { AnimatePresence } from 'framer-motion';
-import Profile from '.pages/Profile';
+import Profile from './pages/Profile';
 
 function App() {
   const location = useLocation();

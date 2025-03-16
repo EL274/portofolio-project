@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { FinanceContext } from '../context/FinanceContext';
-import { getTransactions } from '../services/transactionService';
 import { Link } from 'react-router-dom';
 import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
