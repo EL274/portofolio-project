@@ -30,4 +30,7 @@ app.use('/api/budgets', budgetRoutes);
 
 // Démarrage du serveur
 const PORT = process.env.PORT || 5000;
+app.get('/', (req, res) => {
+   res.send("Bienvenue sur l'API FinEase 🚀");
+});
 app.listen(PORT, () => console.log(`🚀 Serveur lancé sur http://localhost:${PORT}`));
