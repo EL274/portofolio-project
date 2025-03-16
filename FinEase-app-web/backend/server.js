@@ -22,9 +22,6 @@ app.use(morgan('dev'));
 
 //connexion à MongoDB
 connectDB();
-mongoose.connect(process.env.MONGO_URI)
-   .then (() => console.log("Connecté à MongoDB"))
-   .catch(err => console.error("Erreur de connexion à MongoDB:", err));
 
 // Routes API
 app.use('/api/auth', authRoutes);
