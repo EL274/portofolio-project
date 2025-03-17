@@ -1,6 +1,7 @@
 import { Parser } from 'json2csv';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { exportData } from '../services/exportService';
 
 export const exportCSV = (transactions) => {
   const parser = new Parser();

@@ -1,11 +1,11 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { FinanceContext } from '../context/FinanceContext';
 import { motion } from 'framer-motion';
-import AddTransactionForm  from '../components/AddTransactionForm';
-import { exportCSV, exportPDF } from '.../services/exportService';
+import AddTransactionForm from '../components/AddTransactionForm';
+import { exportCSV, exportPDF } from '../services/exportService'; // Correction du chemin
 import { getTransactions, deleteTransaction } from '../services/api';
-
+import Input from '../components/Input'; // Assurez-vous que ce fichier existe
 
 const TransactionsContainer = styled.div`
   padding: 30px;
@@ -43,7 +43,10 @@ const ExportButtons = styled.div`
 
 const Transactions = () => {
   const { transactions, setTransactions } = useContext(FinanceContext);
+  const [filterCategory, setFilterCategory] = useState(''); // Déclaration de l'état
+  const [filterDate, setFilterDate] = useState(''); // Déclaration de l'état
 
+  // Récupérer les transactions au montage du composant
   useEffect(() => {
     const fetchTransactions = async () => {
       const data = await getTransactions();
@@ -51,59 +54,71 @@ const Transactions = () => {
     };
 
     fetchTransactions();
-  }, []);
+  }, [setTransactions]);
 
+  // Supprimer une transaction
   const handleDelete = async (id) => {
     await deleteTransaction(id);
-    setTransactions(transactions.filter(t => t.id !== id));
+    setTransactions(transactions.filter((t) => t.id !== id));
   };
+
+  // Filtrer les transactions
+  const filteredTransactions = transactions.filter(
+    (t) =>
+      (filterCategory ? t.category.includes(filterCategory) : true) &&
+      (filterDate ? t.date === filterDate : true)
+  );
 
   return (
     <motion.div
-    initial={{ opacity: 0, y: 50}}
-    animate={{ opacity : 1, y: 0}} 
-    transition={{ duration:0.5}}
-    exit={{ opacity: 0, y: -50}}
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      exit={{ opacity: 0, y: -50 }}
     >
-    <TransactionsContainer>
-      <h1>Transactions</h1>
+      <TransactionsContainer>
+        <h1>Transactions</h1>
 
-      {/* Boutons d'exportation */}
-      <ExportButtons>
-        <button onClick={() => exportCSV(transactions)}>Exporter en CSV</button>
-        <button onClick={() => exportPDF(transactions)}>Exporter en PDF</button>
-      </ExportButtons>
+        {/* Boutons d'exportation */}
+        <ExportButtons>
+          <button onClick={() => exportCSV(filteredTransactions)}>Exporter en CSV</button>
+          <button onClick={() => exportPDF(filteredTransactions)}>Exporter en PDF</button>
+        </ExportButtons>
 
-      const [setFilterCategory, setFilterCategory] = useState('');
-      const [filterDate, setFilterDate] = useState('');
-      const filteredTransactions = transactions.filter(t &gt 
-  (filterCategory ? t.category.includes(filterCategory) : true) &&
-  (filterDate ? t.date === filterDate : true)
-);
+        {/* Formulaire d'ajout */}
+        <AddTransactionForm />
 
+        {/* Filtres */}
+        <Input
+          type="text"
+          placeholder="Filtrer par catégorie"
+          value={filterCategory}
+          onChange={(e) => setFilterCategory(e.target.value)}
+        />
+        <Input
+          type="date"
+          value={filterDate}
+          onChange={(e) => setFilterDate(e.target.value)}
+        />
 
-      {/* Formulaire d'ajout */}
-      <AddTransactionForm/>
-
-      <Input type="text" placeholder="Filtrer par catégorie" value={filterCategory} onChange={(e) => setFilterCategory(e.target.value)} />
-<Input type="date" value={filterDate} onChange={(e) => setFilterDate(e.target.value)} />
-
-
-      <TransactionList>
-        {transactions.map((t) => (
-          <TransactionItem
-            key={t.id}
-            type={t.type}
-            initial={{ opacity: 0, x: -100 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <span>{t.category} - {t.amount} €</span>
-            <DeleteButton onClick={() => handleDelete(t.id)}>X</DeleteButton>
-          </TransactionItem>
-        ))}
-      </TransactionList>
-    </TransactionsContainer>
+        {/* Liste des transactions filtrées */}
+        <TransactionList>
+          {filteredTransactions.map((t) => (
+            <TransactionItem
+              key={t.id}
+              type={t.type}
+              initial={{ opacity: 0, x: -100 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <span>
+                {t.category} - {t.amount} €
+              </span>
+              <DeleteButton onClick={() => handleDelete(t.id)}>X</DeleteButton>
+            </TransactionItem>
+          ))}
+        </TransactionList>
+      </TransactionsContainer>
     </motion.div>
   );
 };

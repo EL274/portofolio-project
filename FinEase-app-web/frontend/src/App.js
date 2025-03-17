@@ -12,6 +12,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import { AnimatePresence } from 'framer-motion';
 import Profile from './pages/Profile';
+import { useLocation } from 'react-router-dom';
 
 function App() {
   const location = useLocation();
