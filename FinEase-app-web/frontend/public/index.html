@@ -1,15 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta name="description" content="FinEase - Application de gestion financière" />
-    <title>FinEase</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="FinEase - Gérez vos finances simplement et efficacement. Suivez vos revenus, dépenses et budgets en toute simplicité.">
+  <title>FinEase - Gestion Financière</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="icon" type="image/png" href="./assets/Finease.png">
+</head>
+<body>
+  <!-- Vidéo de fond -->
+  <div class="video-background">
+    <video autoplay loop muted playsinline>
+      <source src="./assets/20250311_1922_FinEase Logo Reveal_simple_compose_01jp37308cfhpswyjvh67m8par.mp4" type="video/mp4">
+      Votre navigateur ne supporte pas les vidéos.
+    </video>
+  </div>
+
+  <!-- Overlay (effet foncé sur la vidéo + contenu) -->
+  <div class="overlay">
+    <img src="./assets/Finease.png" alt="FinEase Logo" class="logo">
+    <noscript>Vous devez activer JavaScript pour exécuter cette application.</noscript>
     <div id="root"></div>
-  </body>
+  </div>
+</body>
 </html>

@@ -1,0 +1,42 @@
+/* Vidéo en arrière-plan */
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: -1;
+  }
+  
+  .video-background video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  /* Overlay pour assombrir la vidéo */
+  .overlay {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.6);
+  }
+  
+  /* Logo centré */
+  .logo {
+    width: 200px;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  
+  /* Conteneur React */
+  #root {
+    width: 100%;
+    height: 100%;
+  }
+  
