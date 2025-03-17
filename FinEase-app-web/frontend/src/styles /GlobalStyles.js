@@ -9,12 +9,13 @@ const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    background: #f4f4f4;
+    background:rgb(13, 12, 12);
+    color: gold;
   }
 
   button {
     padding: 10px;
-    background: #007BFF;
+    background: none;
     color: white;
     border: none;
     cursor: pointer;
