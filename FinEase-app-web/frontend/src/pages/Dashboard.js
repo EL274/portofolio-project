@@ -7,7 +7,6 @@ import 'chart.js/auto';
 import { motion } from 'framer-motion';
 import { getTransactions } from '../services/api';
 
-
 const DashboardContainer = styled(motion.div)`
   padding: 30px;
   text-align: center;
@@ -55,10 +54,9 @@ const BudgetAlert = styled.p`
   font-weight: bold;
 `;
 
-
-
 const Dashboard = () => {
-  const { transactions, setTransactions } = useContext(FinanceContext);
+  // Ajout de 'budget' depuis le contexte pour l'utiliser dans l'affichage de l'alerte.
+  const { transactions, setTransactions, budget } = useContext(FinanceContext);
   const [chartData, setChartData] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -85,10 +83,14 @@ const Dashboard = () => {
     };
 
     fetchTransactions();
-  }, []);
+  }, [setTransactions]); // Ajout de setTransactions comme dépendance
 
-  const totalRevenus = transactions.filter(t => t.type === 'revenu').reduce((acc, t) => acc + t.amount, 0);
-  const totalDepenses = transactions.filter(t => t.type === 'dépense').reduce((acc, t) => acc + t.amount, 0);
+  const totalRevenus = transactions
+    .filter(t => t.type === 'revenu')
+    .reduce((acc, t) => acc + t.amount, 0);
+  const totalDepenses = transactions
+    .filter(t => t.type === 'dépense')
+    .reduce((acc, t) => acc + t.amount, 0);
   const solde = totalRevenus - totalDepenses;
 
   return (
@@ -101,9 +103,9 @@ const Dashboard = () => {
       <DashboardContainer>
         <h1>Tableau de Bord</h1>
 
-        {/* Alertes de dépassement de budget */}
+        {/* Alerte de dépassement de budget */}
         {budget > 0 && totalDepenses > budget && (
-            <BudgetAlert>⚠️ Vous avez dépassé votre budget mensuel !</BudgetAlert>
+          <BudgetAlert>⚠️ Vous avez dépassé votre budget mensuel !</BudgetAlert>
         )}
 
         <Summary>
@@ -152,7 +154,9 @@ const Dashboard = () => {
           </motion.div>
         )}
 
-        <TransactionsLink to="/transactions">Voir toutes les transactions</TransactionsLink>
+        <TransactionsLink to="/transactions">
+          Voir toutes les transactions
+        </TransactionsLink>
       </DashboardContainer>
     </motion.div>
   );

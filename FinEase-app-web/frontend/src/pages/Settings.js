@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import { FinanceContext } from '../context/FinanceContext';
+import { updateBudget } from '../services/api';
 
 const SettingsContainer = styled.div`
   max-width: 400px;

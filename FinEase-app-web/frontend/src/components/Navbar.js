@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
-import { AuthContext } from '../../context/AuthContext';
+import { AuthContext } from '../context/AuthContext';
 import FineaseLogo from '../assets/Finease.png'; // Assurez-vous que cette image est bien dans `src/assets/`
 
 const NavbarContainer = styled.nav`
