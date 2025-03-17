@@ -9,7 +9,7 @@ const GlobalStyles = createGlobalStyle`
   }
 
   body {
-    background:rgb(13, 12, 12);
+    background: rgb(13, 12, 12);
     color: gold;
   }
 

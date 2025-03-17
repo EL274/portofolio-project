@@ -6,7 +6,7 @@ import { FinanceProvider } from './context/FinanceContext';
 import { AuthProvider } from './context/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import GlobalStyles from './styles/GlobalStyles';
+import { GlobalStyles } from './styles/GlobalStyles';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
