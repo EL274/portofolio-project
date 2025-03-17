@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { FinanceContext } from '../context/FinanceContext';
 import { motion } from 'framer-motion';
 import AddTransactionForm from '../components/AddTransactionForm';
-import { exportCSV, exportPDF } from '../services/exportService'; // Correction du chemin
 import { getTransactions, deleteTransaction } from '../services/api';
 import Input from '../components/Input'; // Assurez-vous que ce fichier existe
 
@@ -43,8 +42,8 @@ const ExportButtons = styled.div`
 
 const Transactions = () => {
   const { transactions, setTransactions } = useContext(FinanceContext);
-  const [filterCategory, setFilterCategory] = useState(''); // Déclaration de l'état
-  const [filterDate, setFilterDate] = useState(''); // Déclaration de l'état
+  const [filterCategory, setFilterCategory] = useState('');
+  const [filterDate, setFilterDate] = useState('');
 
   // Récupérer les transactions au montage du composant
   useEffect(() => {
