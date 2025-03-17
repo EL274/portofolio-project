@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { FinanceContext } from '../context/FinanceContext';
+import { FinanceContext } from '../context/FinanceContext'; // On extrait le contexte Finance
 import { Link } from 'react-router-dom';
 import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
@@ -55,7 +55,7 @@ const BudgetAlert = styled.p`
 `;
 
 const Dashboard = () => {
-  // Ajout de 'budget' depuis le contexte pour l'utiliser dans l'affichage de l'alerte.
+  // Ajout de 'budget' depuis le contexte Finance pour l'utiliser dans l'affichage de l'alerte
   const { transactions, setTransactions, budget } = useContext(FinanceContext);
   const [chartData, setChartData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -65,6 +65,7 @@ const Dashboard = () => {
       const data = await getTransactions();
       setTransactions(data);
 
+      // Création des données pour le graphique
       const categories = data.map((t) => t.category);
       const amounts = data.map((t) => t.amount);
 
@@ -83,8 +84,9 @@ const Dashboard = () => {
     };
 
     fetchTransactions();
-  }, [setTransactions]); // Ajout de setTransactions comme dépendance
+  }, [setTransactions]); // Ajout de setTransactions comme dépendance pour ESLint
 
+  // Calcul des totaux
   const totalRevenus = transactions
     .filter(t => t.type === 'revenu')
     .reduce((acc, t) => acc + t.amount, 0);
@@ -103,7 +105,7 @@ const Dashboard = () => {
       <DashboardContainer>
         <h1>Tableau de Bord</h1>
 
-        {/* Alerte de dépassement de budget */}
+        {/* Alerte affichée si le total des dépenses dépasse le budget */}
         {budget > 0 && totalDepenses > budget && (
           <BudgetAlert>⚠️ Vous avez dépassé votre budget mensuel !</BudgetAlert>
         )}
