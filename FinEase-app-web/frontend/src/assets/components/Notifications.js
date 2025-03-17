@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { getNotifications } from '../services/api';
+import { getNotifications } from '../../services/api';
 
 const NotificationContainer = styled.div`
   position: fixed;

@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
-import { FinanceContext } from '../context/FinanceContext';
-import { addTransaction } from '../services/transactionService';
+import { FinanceContext } from '../../context/FinanceContext';
+import { addTransaction } from '../../services/transactionService';
 import { motion } from 'framer-motion';
 
 const FormContainer = styled(motion.div)`
