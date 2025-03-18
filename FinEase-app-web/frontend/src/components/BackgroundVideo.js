@@ -1,6 +1,7 @@
 import React from 'react';
-import videoSrc from '../assets/videos/background-video.mp4'; 
 import styled from 'styled-components';
+import videoSrc from '../assets/background-video.mp4';
+
 
 const VideoContainer = styled.div`
   position: fixed;

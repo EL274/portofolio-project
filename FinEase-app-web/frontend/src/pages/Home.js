@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import BackgroundVideo from '../components/BackgrundVideo';
+import BackgroundVideo from '../components/BackgroundVideo';
 
 const HomeContainer = styled.div`
   display: flex;
