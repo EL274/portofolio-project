@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import videoSrc from '../assets/background-video.mp4';
+import videoSrc from '../assets/background-videos.mp4';
 
 
 const VideoContainer = styled.div`
