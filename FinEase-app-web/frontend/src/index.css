@@ -10,7 +10,7 @@ button {
   padding: 10px;
   border: none;
   background: #007BFF;
-  color: white;
+  color: rgb(16, 13, 13);
   border-radius: 5px;
   transition: 0.3s;
 }

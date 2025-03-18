@@ -34,7 +34,7 @@ const Home = () => {
     <HomeContainer>
       <BackgroundVideo/>
       <h1>Bienvenue sur FinEase</h1>
-      <p>Gérez votre budget et suivez vos finances facilement.</p>
+      <p>Your Money,your Power.</p>
       <Button to="/register">Commencer</Button>
     </HomeContainer>
   );
