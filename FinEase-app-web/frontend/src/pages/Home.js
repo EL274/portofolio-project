@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import BackgroundVideo from '../components/BackgrundVideo';
 
 const HomeContainer = styled.div`
   display: flex;
@@ -31,6 +32,7 @@ const Button = styled(Link)`
 const Home = () => {
   return (
     <HomeContainer>
+      <BackgroundVideo/>
       <h1>Bienvenue sur FinEase</h1>
       <p>Gérez votre budget et suivez vos finances facilement.</p>
       <Button to="/register">Commencer</Button>
