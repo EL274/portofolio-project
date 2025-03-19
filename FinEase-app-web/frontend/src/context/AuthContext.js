@@ -1,13 +1,13 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { loginUser, logout, registerUser, getUserData, updateProfile } from '../services/authService';
+import { loginUser, logoutUser, registerUser, getUserData } from '../services/api';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // Ajout d'un état de chargement
+  const [loading, setLoading] = useState(true);
 
-  // Fonction pour récupérer les données de l'utilisateur
+  // Récupérer les données de l'utilisateur
   const fetchUser = async () => {
     try {
       const userData = await getUserData();
@@ -16,43 +16,35 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Erreur lors de la récupération des données utilisateur :", error);
-      setUser(null); // Réinitialiser l'utilisateur en cas d'erreur
+      setUser(null);
     } finally {
-      setLoading(false); // Arrêter le chargement une fois terminé
+      setLoading(false);
     }
   };
 
-  // Fonction pour gérer la connexion
-  const handleLogin = async (email, password) => {
+  // Gérer la connexion
+  const login = async (email, password) => {
     const userData = await loginUser(email, password);
     if (userData) {
       setUser(userData);
     }
   };
 
-  // Fonction pour gérer l'inscription
-  const handleRegister = async (userData) => {
+  // Gérer l'inscription
+  const register = async (userData) => {
     const registeredUser = await registerUser(userData);
     if (registeredUser) {
       setUser(registeredUser);
     }
   };
 
-  // Fonction pour gérer la déconnexion
-  const handleLogout = async () => {
-    await logout();
+  // Gérer la déconnexion
+  const logout = async () => {
+    await logoutUser();
     setUser(null);
   };
 
-  // Fonction pour mettre à jour le profil
-  const handleUpdateProfile = async (updatedData) => {
-    const updatedUser = await updateProfile(updatedData);
-    if (updatedUser) {
-      setUser(updatedUser);
-    }
-  };
-
-  // Effet pour récupérer les données de l'utilisateur au montage du composant
+  // Effet pour récupérer les données de l'utilisateur au montage
   useEffect(() => {
     fetchUser();
   }, []);
@@ -61,15 +53,14 @@ export const AuthProvider = ({ children }) => {
   const value = {
     user,
     loading,
-    login: handleLogin,
-    register: handleRegister,
-    logout: handleLogout,
-    updateProfile: handleUpdateProfile,
+    login,
+    register,
+    logout,
   };
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children} {/* Ne rendre les enfants que lorsque le chargement est terminé */}
+      {!loading && children}
     </AuthContext.Provider>
   );
 };

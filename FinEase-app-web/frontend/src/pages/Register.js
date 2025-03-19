@@ -55,9 +55,24 @@ const Register = () => {
   return (
     <RegisterContainer>
       <h2>Créer un compte</h2>
-      <Input type="text" placeholder="Nom" value={name} onChange={(e) => setName(e.target.value)} />
-      <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <Input type="password" placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} />
+      <Input
+        type="text"
+        placeholder="Nom"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <Input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <Input
+        type="password"
+        placeholder="Mot de passe"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
       <Button onClick={handleRegister}>S'inscrire</Button>
     </RegisterContainer>
   );

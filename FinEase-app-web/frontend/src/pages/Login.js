@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
-import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import { loginUser } from '../services/api';
 
 const LoginContainer = styled.div`
@@ -56,8 +56,18 @@ const Login = () => {
   return (
     <LoginContainer>
       <h2>Connexion</h2>
-      <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <Input type="password" placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} />
+      <Input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <Input
+        type="password"
+        placeholder="Mot de passe"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
       <Button onClick={handleLogin}>Se connecter</Button>
     </LoginContainer>
   );
