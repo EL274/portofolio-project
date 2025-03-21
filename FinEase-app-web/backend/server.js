@@ -12,6 +12,7 @@ const authRoutes = require('./routes/authRoutes');
 const  transactionRoutes = require('./routes/transactionRoutes.js');
 const budgetRoutes = require('./routes/budgetRoutes');
 const connectDB = require('./db');
+
 const app = express();
 
 //middlewares
@@ -27,6 +28,17 @@ connectDB();
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/budgets', budgetRoutes);
+
+// Gestion des erreurs 
+app.use((req, res) => {
+   res.status(404).json({ message: "Route introuvable"});
+});
+
+app.use((error, req, res, next) => {
+   console.error(error.stack);
+   res.status(500).json({ message: "Erreur interne du serveur" });
+});
+
 
 // Démarrage du serveur
 const PORT = process.env.PORT || 5000;
