@@ -38,6 +38,18 @@ export const logoutUser = async () => {
     }
 };
 
+// Récupérer les données de l'utilisateur 
+export const getUserData = async () => {
+    try {
+        const response = await api.get("/auth/user");
+        return response.data;
+    } catch (error) {
+        console.error("Erreur lors de la récupération des données utilisateur :", error.response?.data || error.message);
+        return null;
+    }
+        
+};
+
 /** 🔹 BUDGET **/
 export const getBudget = async () => {
     try {
