@@ -17,7 +17,12 @@ const app = express();
 
 //middlewares
 app.use(express.json());
-app.use(cors( ));
+app.use(cors({
+   origin: process.env.FRONTEND || 'http://localhost:3000',
+   credentials: true,
+}
+
+ ));
 app.use(cookieParser());
 app.use(morgan('dev'));
 
@@ -29,15 +34,24 @@ app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/budgets', budgetRoutes);
 
+// Route de base
+app.get('/', (req, res) => {
+   res.json({ message: "Bienvenue sur FinEase" });
+ });
+ 
+
 // Gestion des erreurs 
 app.use((req, res) => {
    res.status(404).json({ message: "Route introuvable"});
 });
 
-app.use((error, req, res, next) => {
-   console.error(error.stack);
-   res.status(500).json({ message: "Erreur interne du serveur" });
-});
+app.use((err, req, res, next) => {
+   console.error(err.stack);
+   res.status(500).json({
+     message: "Erreur interne du serveur",
+     error: process.env.NODE_ENV === 'development' ? err.message : undefined,
+   });
+ });
 
 
 // Démarrage du serveur
