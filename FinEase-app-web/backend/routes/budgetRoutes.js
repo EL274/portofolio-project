@@ -2,7 +2,7 @@ const express = require('express');
 const Budget = require('../models/Budget');
 const Transaction = require('../models/Transaction'); // Ajout pour récupérer les transactions
 const Notification = require('../models/Notification');
-const authMiddleware = require('../middlewares/authMiddleware');
+const authMiddleware = require('../middleware/authMiddleware');
 const { sendBudgetAlertEmail } = require('../services/emailService'); // Ajout pour l'envoi d'email
 
 const router = express.Router();
