@@ -24,7 +24,9 @@ app.use(cors({
 
  ));
 app.use(cookieParser());
-app.use(morgan('dev'));
+app.use(morgan('combined', {
+   skip: (req, res) => res.statusCode < 400
+}));
 
 //connexion à MongoDB
 connectDB();
