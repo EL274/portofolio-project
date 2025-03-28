@@ -7,56 +7,60 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Récupérer les données de l'utilisateur
   const fetchUser = async () => {
     try {
       const userData = await getUserData();
-      if (userData) {
-        setUser(userData);
-      }
+      setUser(userData || null);
+      if (userData) localStorage.setItem('isAuthenticated', 'true');
     } catch (error) {
-      console.error("Erreur lors de la récupération des données utilisateur :", error);
+      console.error("Erreur d'authentification :", error);
+      localStorage.removeItem('isAuthenticated');
       setUser(null);
     } finally {
       setLoading(false);
     }
   };
 
-  // Gérer la connexion
   const login = async (email, password) => {
-    const userData = await loginUser(email, password);
-    if (userData) {
+    try {
+      const userData = await loginUser(email, password);
       setUser(userData);
+      localStorage.setItem('isAuthenticated', 'true');
+      return userData;
+    } catch (error) {
+      console.error("Échec de la connexion :", error);
+      throw error;
     }
   };
 
-  // Gérer l'inscription
   const register = async (userData) => {
-    const registeredUser = await registerUser(userData);
-    if (registeredUser) {
+    try {
+      const registeredUser = await registerUser(userData);
       setUser(registeredUser);
+      localStorage.setItem('isAuthenticated', 'true');
+      return registeredUser;
+    } catch (error) {
+      console.error("Échec de l'inscription :", error);
+      throw error;
     }
   };
 
-  // Gérer la déconnexion
   const logout = async () => {
-    await logoutUser();
-    setUser(null);
+    try {
+      await logoutUser();
+    } finally {
+      localStorage.removeItem('isAuthenticated');
+      setUser(null);
+    }
   };
 
-  // Effet pour récupérer les données de l'utilisateur au montage
   useEffect(() => {
-    fetchUser();
+    const isAuthenticated = localStorage.getItem('isAuthenticated');
+    if (isAuthenticated) fetchUser();
+    else setLoading(false);
   }, []);
 
-  // Valeurs fournies par le contexte
-  const value = {
-    user,
-    loading,
-    login,
-    register,
-    logout,
-  };
+  const value = { user, loading, login, register, logout };
 
   return (
     <AuthContext.Provider value={value}>
