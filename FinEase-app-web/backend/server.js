@@ -17,19 +17,39 @@ const app = express();
 
 //middlewares
 app.use(express.json());
-app.use(cors({
-   origin: process.env.FRONTEND || 'http://localhost:3000',
-   credentials: true,
-}
-
- ));
 app.use(cookieParser());
-app.use(morgan('combined', {
-   skip: (req, res) => res.statusCode < 400
+
+// Configuration de CORS
+app.use(cors({
+   origin: process.env.FRONTEND_URL || 'https://localhost:3000',
+   credentials: true,
+   methods: [ 'GET', 'POST', 'PUT', 'DELETE'],
+   allowedHeaders: [ 'Content-Type', 'Authorization','X-Requested-With']
+}));
+
+//Middleware pour exposers les headers cookies
+app.use((req, res, next) => {
+   res.header('Access-Control-Allow-Credentials', true);
+   res.header('Access-Control-Allow-Headers', 'Set-Cookie');
+   next();
+});
+
+// Logging des requêtes (gère uniquement les erreurs en production)
+app.use(morgan(process.env.NODE_ENV ===  'developpement' ? 'dev' : 'combined', {
+   skip: (req, res) => process.env.NODE_ENV === 'production' && res.statusCode < 400
 }));
 
 //connexion à MongoDB
-connectDB();
+mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/FinEase-app-web', {
+   useNewUrlParser: true,
+   useUnifieldTopology: true,
+   serverSelectionTimeoutMS: 5000
+})
+.then(() => console.log('connecté à MongoDB'))
+.catch(err => {
+   console.error('Erreur de connexion à MongoDB:', err.message);
+   process.exit(1);
+});
 
 // Routes API
 app.use('/api/auth', authRoutes);
@@ -38,18 +58,25 @@ app.use('/api/budgets', budgetRoutes);
 
 // Route de base
 app.get('/', (req, res) => {
-   res.json({ message: "Bienvenue sur FinEase" });
+   res.json({ message: "Bienvenue sur FinEase",
+      status: "Actif",
+      database: mongoose.connection.readyState === 1 ? "Connecté" : "Déconnecté"
+   });
  });
  
 
 // Gestion des erreurs 
 app.use((req, res) => {
-   res.status(404).json({ message: "Route introuvable"});
+   res.status(404).json({ 
+      success: false,
+      message: "Route introuvable"
+   });
 });
 
 app.use((err, req, res, next) => {
-   console.error(err.stack);
+   console.error("Erreur :", err.stack);
    res.status(500).json({
+     success: false,
      message: "Erreur interne du serveur",
      error: process.env.NODE_ENV === 'development' ? err.message : undefined,
    });
@@ -58,7 +85,18 @@ app.use((err, req, res, next) => {
 
 // Démarrage du serveur
 const PORT = process.env.PORT || 5000;
-app.get('/', (req, res) => {
-   res.send("Bienvenue sur FinEase ");
+const server = app.listen(PORT,() => {
+   console.log(`Serveur Lancé sur http://localhost:${PORT}`);
+   console.log(`Frontend :${process.env.FRONTEND_URL || 'htpps://localhost:3000'}`);
+   console.log(` Base de données: ${process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/FinEase-app-web'}`);
+
 });
-app.listen(PORT, () => console.log(`Serveur lancé sur http://localhost:${PORT}`));
+//Gestion propres des arrêts 
+process.on('SIGINT', () => {
+   server.close(() => {
+      mongoose.connection.close(false, () => {
+         console.log('Serveur arrêté');
+         process.exit(0);
+      });
+   });
+});
