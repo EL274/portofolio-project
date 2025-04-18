@@ -23,7 +23,9 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const userData = await loginUser(email, password);
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+      });
       setUser(userData);
       localStorage.setItem('isAuthenticated', 'true');
       return userData;
