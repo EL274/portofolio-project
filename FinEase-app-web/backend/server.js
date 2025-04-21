@@ -42,7 +42,7 @@ app.use(morgan(process.env.NODE_ENV ===  'developpement' ? 'dev' : 'combined', {
 //connexion à MongoDB
 mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/FinEase-app-web', {
    useNewUrlParser: true,
-   useUnifieldTopology: true,
+   useUnifiedTopology: true,
    serverSelectionTimeoutMS: 5000
 })
 .then(() => console.log('connecté à MongoDB'))
