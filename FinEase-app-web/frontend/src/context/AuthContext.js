@@ -11,10 +11,12 @@ export const AuthProvider = ({ children }) => {
     try {
       const userData = await getUserData();
       setUser(userData || null);
-      if (userData) localStorage.setItem('isAuthenticated', 'true');
+      if (userData) {
+        localStorage.setItem('user', JSON.stringify(userData));
+      }
     } catch (error) {
       console.error("Erreur d'authentification :", error);
-      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('user');
       setUser(null);
     } finally {
       setLoading(false);
@@ -25,12 +27,22 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email, password })
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Échec de connexion");
+      }
+
+      const { user: userData } = await response.json();
       setUser(userData);
-      localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('user', JSON.stringify(userData));
       return userData;
     } catch (error) {
-      console.error("Échec de la connexion :", error);
+      console.error("Erreur:", error.message);
       throw error;
     }
   };
@@ -39,7 +51,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const registeredUser = await registerUser(userData);
       setUser(registeredUser);
-      localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('user', JSON.stringify(registeredUser));
       return registeredUser;
     } catch (error) {
       console.error("Échec de l'inscription :", error);
@@ -51,15 +63,17 @@ export const AuthProvider = ({ children }) => {
     try {
       await logoutUser();
     } finally {
-      localStorage.removeItem('isAuthenticated');
+      localStorage.removeItem('user');
       setUser(null);
     }
   };
 
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    if (isAuthenticated) fetchUser();
-    else setLoading(false);
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+    setLoading(false);
   }, []);
 
   const value = { user, loading, login, register, logout };
