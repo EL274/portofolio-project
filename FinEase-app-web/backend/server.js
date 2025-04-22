@@ -35,12 +35,12 @@ app.use((req, res, next) => {
 });
 
 // Logging des requêtes (gère uniquement les erreurs en production)
-app.use(morgan(process.env.NODE_ENV ===  'developpement' ? 'dev' : 'combined', {
+app.use(morgan(process.env.NODE_ENV ===  'development' ? 'dev' : 'combined', {
    skip: (req, res) => process.env.NODE_ENV === 'production' && res.statusCode < 400
 }));
 
 //connexion à MongoDB
-mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/FinEase-app-web', {
+mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/dark', {
    useNewUrlParser: true,
    useUnifiedTopology: true,
    serverSelectionTimeoutMS: 5000
