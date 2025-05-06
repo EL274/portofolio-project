@@ -31,6 +31,9 @@ app.use(cors({
 app.use((req, res, next) => {
    res.header('Access-Control-Allow-Credentials', true);
    res.header('Access-Control-Allow-Headers', 'Set-Cookie');
+   app.use((req, res, next) => {
+      console.log('Etat MongoDB:', mongoose.STATES[mongoose.connection.readyState]);
+   })
    next();
 });
 
@@ -45,9 +48,11 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/dark', {
    useUnifiedTopology: true,
    serverSelectionTimeoutMS: 5000
 })
-.then(() => console.log('connecté à MongoDB'))
+.then(() => console.log('connecté à MongoDB (State:', mongoose.connection.readyState))
 .catch(err => {
    console.error('Erreur de connexion à MongoDB:', err.message);
+   console.log('Solution : Démarrer MongoDB avec Docker :');
+   console.log('docker run -d --name mongodb -p 27017:27017 mongo:latest')
    process.exit(1);
 });
 
