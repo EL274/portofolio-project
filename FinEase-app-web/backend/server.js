@@ -44,8 +44,6 @@ app.use(morgan(process.env.NODE_ENV ===  'development' ? 'dev' : 'combined', {
 
 //connexion à MongoDB
 mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/dark', {
-   useNewUrlParser: true,
-   useUnifiedTopology: true,
    serverSelectionTimeoutMS: 5000
 })
 .then(() => console.log('connecté à MongoDB (State:', mongoose.connection.readyState))
