@@ -27,15 +27,6 @@ app.use(cors({
    allowedHeaders: [ 'Content-Type', 'Authorization','X-Requested-With']
 }));
 
-//Middleware pour exposers les headers cookies
-app.use((req, res, next) => {
-   res.header('Access-Control-Allow-Credentials', true);
-   res.header('Access-Control-Allow-Headers', 'Set-Cookie');
-   app.use((req, res, next) => {
-      console.log('Etat MongoDB:', mongoose.STATES[mongoose.connection.readyState]);
-   })
-   next();
-});
 
 // Logging des requêtes (gère uniquement les erreurs en production)
 app.use(morgan(process.env.NODE_ENV ===  'development' ? 'dev' : 'combined', {
