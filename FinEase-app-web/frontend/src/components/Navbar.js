@@ -8,18 +8,18 @@ const NavbarContainer = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px;
-  background: rgba(0, 0, 0, 0.8);
+  padding: 1px;
+  background: rgba(21, 4, 4, 0.8);
   backdrop-filter: blur(10px);
   position: fixed;
-  width: 100%;
+  width: %;
   top: 0;
   left: 0;
   z-index: 100;
 `;
 
 const Logo = styled.img`
-  width: 120px;
+  width: 80px;
 `;
 
 const NavLinks = styled.div`

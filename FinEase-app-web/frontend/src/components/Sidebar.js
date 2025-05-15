@@ -6,7 +6,7 @@ import { FaBars, FaTimes } from "react-icons/fa";
 const SidebarContainer = styled.div`
   width: 250px;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(193, 168, 168, 0.9);
   color: white;
   position: fixed;
   left: ${(props) => (props.open ? "0" : "-250px")};

@@ -1,18 +1,12 @@
-const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const { body, validationResult } = require('express-validator');
-const authenticateToken = require('../middleware/authenticateToken'); // Import correct
+const { validationResult } = require('express-validator');
 
 const router = express.Router();
 
 // Inscription avec validation
-router.post('/register', [
-  body('name').isLength({ min: 3 }).withMessage("Le nom doit avoir au moins 3 caractères"),
-  body('email').isEmail().withMessage("L'email est invalide"),
-  body('password').isLength({ min: 6 }).withMessage("Le mot de passe doit avoir au moins 6 caractères")
-], async (req, res) => {
+ exports.register = async (req, res) => {
   // Valider les données
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -41,7 +35,7 @@ router.post('/register', [
     console.error("Erreur lors de l'inscription :", err);
     res.status(500).json({ error: "Erreur lors de l'inscription" });
   }
-});
+};
 
 // Connexion
 router.post('/login', async (req, res) => {

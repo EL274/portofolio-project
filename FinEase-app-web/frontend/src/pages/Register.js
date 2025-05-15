@@ -7,7 +7,7 @@ const RegisterContainer = styled.div`
   max-width: 400px;
   margin: 50px auto;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(244, 243, 243, 0.9);
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   text-align: center;
@@ -24,11 +24,11 @@ const Input = styled.input`
 const Button = styled.button`
   width: 100%;
   padding: 10px;
-  background: #007BFF;
+  background:rgb(40, 137, 185);
   color: white;
   border: none;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 10px;
   transition: 0.3s;
 
   &:hover {
