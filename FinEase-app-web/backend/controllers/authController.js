@@ -73,7 +73,7 @@ exports.logout = (req, res) => {
   res.clearCookie('token').json({ message: "Déconnecté" });
 };
 
-exports.getCurrentUser = async (req, res) => {
+exports.getUserData = async (req, res) => {
   try {
     if (!req.user) {
       return res.status(404).json({ error: "Utilisateur non trouvé" });
