@@ -52,20 +52,52 @@ exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await findUserByEmail(email);
+    //debug: vérifier les donées reçues
+    console.log('Tentative de connexion avec:', { email, password: password ? '*****'
+      : 'non fourni' }); 
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email et mot de passe requis" });
+    }
+
+    const user = await User.findOne({ email }).select(' +password');
     if (!user) {
+      console.log('Utilisateur non trouvé');
       return res.status(401).json({ error: "Email ou mot de passe incorrect" });
     }
+    //debug: Afficher lre hash stocké
+    console.log('Comparaison mot de passe pour:', user.email); 
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
+      console.log('Mot de passe incorrect pour email:',email);
       return res.status(401).json({ error: "Email ou mot de passe incorrect" });
     }
 
-    sendAuthToken(res, user);
-    res.json({ message: "Connexion réussie" });
+    // Génération du Token
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: '7d'
+    });
+    
+    // Configurez le cookie 
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'Strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000 
+    });
+
+    //Réponse unique avec informations utilisateur
+    res.status(200).json({
+      message: " Connexion réussie",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email
+      }
+    });
   } catch (err) {
-    handleServerError(res, err, "la connexion");
+    console.error('Erreur login:', err);
+    res.status(500).json({ error: "Erreur lors de la connexion" });
   }
 };
 
