@@ -38,6 +38,6 @@ router.post('/login', [
 router.post('/logout', authController.logout);
 
 // Données utilisateur (protégé)
-router.get('/me', authenticateToken, authController.getUserData);
+router.get('/user', authenticateToken, authController.getUserData);
 
 module.exports = router;
