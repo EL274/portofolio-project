@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
@@ -115,5 +117,68 @@ exports.getUserData = async (req, res) => {
     res.json(user);
   } catch (err) {
     handleServerError(res, err, "la récupération des données utilisateur");
+  }
+};
+
+exports.forgotPassword = async (req, res) => {
+  const { email} = req.body;
+
+  try {
+    const user = await User.findOne({email});
+    if (!user) {
+      return res.status(404).json({ error: "Aucun compte n'est associé à ce mail."});
+    }
+
+    //Générer du token et expiration
+    const token = crypto.randomBytes(20).toString('hex');
+    user.resetPasswordToken = token;
+    user.resetPasswordTokenExpires = Date.now() + 3600000; 
+    
+    await user.save();
+
+    //Envoi de l'email(configuration à adapter)
+    const transporter = nodemailler.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER?
+        password: process.env.EMAIL_PASSWORD,
+      },
+    });
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+    await transporter.sendMAIL({
+      to: user.email,
+      subject: 'Réinitialisation du mot de passe',
+      html: `Cliquez <a href="${resetLink}">ici</a> pour réinitialiser votre mot de passe:`,
+    });
+
+    res.status(200).json({ message: "Email de réinitialisation envoyé."})
+  } catch(err) {
+    res.status(500).json({ message: "Erreur serveur."});
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  const token = req.params;
+  const {newPassword } = req.body;
+
+  try {
+    const user = await User.findOne({
+      resetPasswordToken: Token,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+    if (!user) {
+      return res.status(400).json({ error : "Token invalide ou expiré "});
+    }
+    //Hacher le nouveau mot de passe et la mise à jour 
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordTokenExpires = undefined;
+
+    await user.save();
+    res.status(200).json({ message: "Mot de passe réinitialisé et mise à jour avec succès."});
+  } catch (err) {
+    res.status(500).json({ error: "Erreur serveur." });
   }
 };
