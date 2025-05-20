@@ -36,6 +36,23 @@ const Button = styled.button`
     background: #0056b3;
   }
 `;
+// Définissez ErrorMessage comme composant styled 
+const ErrorMessage = styled.P`
+  color: red;
+  margin-top: 10 px;
+  `;
+  const ForgotPasswordLink = styled(Link)`
+  display: block;
+  margin-top: 20px;
+  color: #0066cc;
+  text-decoration: none;
+  font-size: 14px;
+  
+  &:hover {
+  text-decoration: underline;
+  }
+  `;
+
 
 const Login = () => {
   const { setUser } = useContext(AuthContext);
@@ -56,19 +73,27 @@ const Login = () => {
   return (
     <LoginContainer>
       <h2>Connexion</h2>
+      <form onSubmit={handleLogin}>
       <Input
         type="email"
         placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        required
       />
       <Input
         type="password"
         placeholder="Mot de passe"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        required
       />
+      {Error && <ErrorMessage>{error}</ErrorMessage>}
       <Button onClick={handleLogin}>Se connecter</Button>
+      </form>
+      <ForgotPasswordLink to="/forgot-password">
+      MOT de passe oublié?
+      </ForgotPasswordLink>
     </LoginContainer>
   );
 };
