@@ -40,4 +40,10 @@ router.post('/logout', authController.logout);
 // Données utilisateur (protégé)
 router.get('/user', authenticateToken, authController.getUserData);
 
+//Réinitialisation du mot de passe
+
+router.post('/reset-password/:Token', [
+  body('newPsassword').islength({ min: 6 }).withMessage("le mot de passe doit avoir au moins 6 caractères")
+], authController.resetPassword);
+
 module.exports = router;
