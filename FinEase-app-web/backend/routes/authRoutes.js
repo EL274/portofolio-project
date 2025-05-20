@@ -40,6 +40,12 @@ router.post('/logout', authController.logout);
 // Données utilisateur (protégé)
 router.get('/user', authenticateToken, authController.getUserData);
 
+//mot de passe oublié 
+router.post('/forgot-password', 
+  body('email').isEmail().withMessage("Email invalide"),
+  authController.forgotPassword
+);
+
 //Réinitialisation du mot de passe
 
 router.post('/reset-password/:Token', [
