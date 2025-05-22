@@ -66,12 +66,12 @@ const Login = () => {
     e.preventDefault();
     setError('');
     try {
-    const user = await loginUser(email, password);
-    if (user) {
-      setUser(user);
+    const result = await loginUser(email, password);
+    if (result?.user) {
+      setUser(result.user);
       navigate('/dashboard');
     } else {
-      setError("Échec de la connexion. Vérifiez vos informations.");
+      alert("Échec de la connexion. Vérifiez vos informations.");
     }
   } catch (err) {
     setError("Erreur serveur.Veuillez réessayer plus tard.");

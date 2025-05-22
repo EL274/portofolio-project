@@ -37,15 +37,19 @@ export const AuthProvider = ({ children }) => {
         throw new Error(errorData.error || "Échec de connexion");
       }
 
-      const { user: userData } = await response.json();
-      setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
-      return userData;
+      const data = await response.json();
+      if (data?.user) {
+        setUser(data.user);
+      localStorage.setItem('user', JSON.stringify(data.user));
+      return data.user;
+      } else{
+        throw new Error("Utilisateur non trouvé");
+      }
     } catch (error) {
       console.error("Erreur:", error.message);
       throw error;
     }
-  };
+    };
 
   const register = async (userData) => {
     try {
