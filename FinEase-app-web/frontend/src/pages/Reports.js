@@ -4,6 +4,27 @@ import { FinanceContext } from '../context/FinanceContext';
 import { Line, Doughnut } from 'react-chartjs-2';
 import { motion } from 'framer-motion';
 
+import {
+  Chart as ChartJS,
+  LineElement,
+  ArcElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+ChartJS.register(
+  LineElement,
+  ArcElement,
+  PointElement,
+  CategoryScale,
+  LinearScale,
+  Tooltip,
+  Legend
+);
+
 const ReportsContainer = styled(motion.div)`
   padding: 30px;
   text-align: center;

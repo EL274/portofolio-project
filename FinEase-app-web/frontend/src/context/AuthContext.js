@@ -16,8 +16,8 @@ export const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Erreur d'authentification :", error);
-      localStorage.removeItem('user');
       setUser(null);
+      localStorage.removeItem('user');
     } finally {
       setLoading(false);
     }
@@ -62,6 +62,8 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await logoutUser();
+    } catch (error) {
+      console.error("Erreur lors de la déconnexion : ", error);
     } finally {
       localStorage.removeItem('user');
       setUser(null);
@@ -69,14 +71,10 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-    setLoading(false);
+    fetchUser();
   }, []);
 
-  const value = { user, loading, login, register, logout };
+  const value = { user, loading, login, register, logout, fetchUser };
 
   return (
     <AuthContext.Provider value={value}>

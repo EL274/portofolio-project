@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { loginUser } from '../services/api';
+import { Link } from 'react-router-dom';
 
 const LoginContainer = styled.div`
   max-width: 500px;
@@ -14,7 +15,7 @@ const LoginContainer = styled.div`
   text-align: center;
 `;
 
-const Input = styled.input`
+const Input = styled.input` 
   width: 100%;
   padding: 5px;
   margin: 10px 0;
@@ -58,17 +59,24 @@ const Login = () => {
   const { setUser } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+    try {
     const user = await loginUser(email, password);
     if (user) {
       setUser(user);
       navigate('/dashboard');
     } else {
-      alert("Échec de la connexion. Vérifiez vos informations.");
+      setError("Échec de la connexion. Vérifiez vos informations.");
     }
-  };
+  } catch (err) {
+    setError("Erreur serveur.Veuillez réessayer plus tard.");
+  }
+};
 
   return (
     <LoginContainer>
@@ -88,8 +96,8 @@ const Login = () => {
         onChange={(e) => setPassword(e.target.value)}
         required
       />
-      {Error && <ErrorMessage>{error}</ErrorMessage>}
-      <Button onClick={handleLogin}>Se connecter</Button>
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+      <Button type="submit">Se connecter</Button>
       </form>
       <ForgotPasswordLink to="/forgot-password">
       MOT de passe oublié?

@@ -40,6 +40,30 @@ const ExportButtons = styled.div`
   margin-bottom: 20px;
 `;
 
+//Fonctions d'export ajoutés
+const exportCSV = (data) => {
+  const headers = "Catégorie, Montant,Type,Date\n";
+  const rows = data.map(t => `$(t.category},${t.amount},${t.type},${t.date}`).join("\n");
+ const csv = headers + rows;
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'transactions.csv';
+  link.click();
+};
+
+const exportPDF = (data) => {
+  import('jspdf').then(jsPDF => {
+    const doc = new jsPDF.jsPDF();
+    doc.text("Transactions", 10, 10);
+    data.forEach((t, i) => {
+      doc.text(`${t.category} - ${t.amount}€ - ${t.type} - ${t.date}`, 10, 20 + i * 10);
+    });
+    doc.save("transactions.pdf");
+  });
+};
+
 const Transactions = () => {
   const { transactions, setTransactions } = useContext(FinanceContext);
   const [filterCategory, setFilterCategory] = useState('');
