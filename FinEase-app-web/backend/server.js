@@ -82,7 +82,7 @@ const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT,() => {
    console.log(`Serveur Lancé sur http://localhost:${PORT}`);
    console.log(`Frontend :${process.env.FRONTEND_URL || 'htpps://localhost:3000'}`);
-   console.log(` Base de données: ${process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/FinEase-app-web'}`);
+   console.log(` Base de données: ${process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/dark'}`);
 
 });
 //Gestion propres des arrêts 
