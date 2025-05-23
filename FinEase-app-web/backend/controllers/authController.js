@@ -61,7 +61,7 @@ exports.login = async (req, res) => {
       return res.status(400).json({ error: "Email et mot de passe requis" });
     }
 
-    const user = await User.findOne({ email }).select(' +password');
+    const user = await User.findOne({ email }).select('+password');
     if (!user) {
       console.log('Utilisateur non trouvé');
       return res.status(401).json({ error: "Email ou mot de passe incorrect" });
