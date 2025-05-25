@@ -67,6 +67,8 @@ exports.login = async (req, res) => {
       return res.status(401).json({ error: "Email ou mot de passe incorrect" });
     }
     //debug: Afficher lre hash stocké
+    console.log("Mot de passe fourni:", password);
+    console.log("Mot de passe haché en base:", user.password);
     console.log('Comparaison mot de passe pour:', user.email); 
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
