@@ -12,7 +12,7 @@ const findUserByEmail = async (email) => {
 
 const handleServerError = (res, err, context) => {
   console.error(`Erreur lors de ${context}:`, err);
-  res.status(500).json({ error: `Erreur lors de ${context}` });
+  res.status(500).json({ error: `Erreur serveur lors de ${context}` });
 };
 
 const sendAuthToken = (res, user) => {
@@ -44,36 +44,44 @@ exports.register = async (req, res) => {
     const user = new User({ name, email, password: hashedPassword });
     await user.save();
 
-    res.status(201).json({ message: "Utilisateur créé avec succès" });
+    res.status(201).json({ 
+      message: "Utilisateur créé avec succès",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email
+      }
+    });
   } catch (err) {
     handleServerError(res, err, "l'inscription");
   }
 };
 
 exports.login = async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email et mot de passe requis" });
+  }
+
   try {
-    const { email, password } = req.body;
-
-    //debug: vérifier les donées reçues
-    console.log('Tentative de connexion avec:', { email, password: password ? '*****'
-      : 'non fourni' }); 
-    if (!email || !password) {
-      return res.status(400).json({ error: "Email et mot de passe requis" });
-    }
-
     const user = await User.findOne({ email }).select('+password');
+    
     if (!user) {
-      console.log('Utilisateur non trouvé');
+      console.log('Utilisateur non trouvé pour email:', email);
       return res.status(401).json({ error: "Email ou mot de passe incorrect" });
     }
-    //debug: Afficher lre hash stocké
-    console.log("Mot de passe fourni:", password);
-    console.log("Mot de passe haché en base:", user.password);
-    console.log('Comparaison mot de passe pour:', user.email); 
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      console.log('Mot de passe incorrect pour email:',email);
+    console.log('Comparaison mot de passe pour:', email);
+    console.log('Mot de passe fourni:', password);
+    console.log('Mot de passe haché en base:', user.password);
+
+    // Test manuel de vérification (debug)
+    const manualCheck = await bcrypt.compare(password, user.password);
+    console.log('Résultat comparaison bcrypt:', manualCheck);
+
+    if (!manualCheck) {
+      console.log('Échec comparaison mot de passe pour:', email);
       return res.status(401).json({ error: "Email ou mot de passe incorrect" });
     }
 
@@ -82,17 +90,17 @@ exports.login = async (req, res) => {
       expiresIn: '7d'
     });
     
-    // Configurez le cookie 
+    // Configuration du cookie
     res.cookie('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'Strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000 
+      maxAge: 7 * 24 * 60 * 60 * 1000
     });
 
-    //Réponse unique avec informations utilisateur
+    // Réponse avec informations utilisateur
     res.status(200).json({
-      message: " Connexion réussie",
+      message: "Connexion réussie",
       user: {
         id: user._id,
         name: user.name,
@@ -100,22 +108,21 @@ exports.login = async (req, res) => {
       }
     });
   } catch (err) {
-    console.error('Erreur login:', err);
-    res.status(500).json({ error: "Erreur lors de la connexion" });
+    console.error('Erreur détaillée lors du login:', err);
+    res.status(500).json({ error: "Erreur serveur lors de la connexion" });
   }
 };
 
 exports.logout = (req, res) => {
-  res.clearCookie('token').json({ message: "Déconnecté" });
+  res.clearCookie('token').json({ message: "Déconnecté avec succès" });
 };
 
 exports.getUserData = async (req, res) => {
   try {
-    if (!req.user) {
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) {
       return res.status(404).json({ error: "Utilisateur non trouvé" });
     }
-    
-    const user = await User.findById(req.user.id).select('-password');
     res.json(user);
   } catch (err) {
     handleServerError(res, err, "la récupération des données utilisateur");
@@ -123,64 +130,68 @@ exports.getUserData = async (req, res) => {
 };
 
 exports.forgotPassword = async (req, res) => {
-  const { email} = req.body;
+  const { email } = req.body;
 
   try {
-    const user = await User.findOne({email});
+    const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ error: "Aucun compte n'est associé à ce mail."});
+      return res.status(404).json({ error: "Aucun compte associé à cet email" });
     }
 
-    //Générer du token et expiration
+    // Génération du token et expiration
     const token = crypto.randomBytes(20).toString('hex');
     user.resetPasswordToken = token;
-    user.resetPasswordTokenExpires = Date.now() + 3600000; 
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 heure
     
     await user.save();
 
-    //Envoi de l'email(configuration à adapter)
-    const transporter = nodemailler.createTransport({
+    // Configuration de l'email (à adapter selon ton SMTP)
+    const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER?
-        password: process.env.EMAIL_PASSWORD,
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
       },
     });
+
     const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
-    await transporter.sendMAIL({
+    await transporter.sendMail({
       to: user.email,
       subject: 'Réinitialisation du mot de passe',
-      html: `Cliquez <a href="${resetLink}">ici</a> pour réinitialiser votre mot de passe:`,
+      html: `Cliquez <a href="${resetLink}">ici</a> pour réinitialiser votre mot de passe.`,
     });
 
-    res.status(200).json({ message: "Email de réinitialisation envoyé."})
-  } catch(err) {
-    res.status(500).json({ message: "Erreur serveur."});
+    res.status(200).json({ message: "Email de réinitialisation envoyé" });
+  } catch (err) {
+    console.error('Erreur forgotPassword:', err);
+    res.status(500).json({ error: "Erreur serveur" });
   }
 };
 
 exports.resetPassword = async (req, res) => {
-  const token = req.params;
-  const {newPassword } = req.body;
+  const { token } = req.params;
+  const { newPassword } = req.body;
 
   try {
     const user = await User.findOne({
-      resetPasswordToken: Token,
+      resetPasswordToken: token,
       resetPasswordExpires: { $gt: Date.now() },
     });
-    if (!user) {
-      return res.status(400).json({ error : "Token invalide ou expiré "});
-    }
-    //Hacher le nouveau mot de passe et la mise à jour 
 
+    if (!user) {
+      return res.status(400).json({ error: "Token invalide ou expiré" });
+    }
+
+    // Hachage et mise à jour
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedPassword;
     user.resetPasswordToken = undefined;
-    user.resetPasswordTokenExpires = undefined;
+    user.resetPasswordExpires = undefined;
 
     await user.save();
-    res.status(200).json({ message: "Mot de passe réinitialisé et mise à jour avec succès."});
+    res.status(200).json({ message: "Mot de passe réinitialisé avec succès" });
   } catch (err) {
-    res.status(500).json({ error: "Erreur serveur." });
+    console.error('Erreur resetPassword:', err);
+    res.status(500).json({ error: "Erreur serveur" });
   }
 };
