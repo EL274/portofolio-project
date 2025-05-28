@@ -130,6 +130,27 @@ const Reports = () => {
         </Select>
       </FilterContainer>
 
+       <div style={{ margin: '20px 0', padding: '15px', background: '#f5f5f5', borderRadius: '8px' }}>
+        <h3>Résumé Financier</h3>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '30px' }}>
+          <div>
+          <p style={{ color: 'green', fontWeight: 'bold' }}>Revenus Totaux</p>
+          <p>{revenues.toFixed(2)} €</p>
+        </div>
+        <div>
+          <p style={{ color: 'red', fontWeight: 'bold' }}>Dépenses Totales</p>
+          <p>{expenses.toFixed(2)} €</p>
+        </div>
+        <div>
+          <p style={{ fontWeight: 'bold' }}>Solde</p>
+          <p style={{ color: revenues - expenses >= 0 ? 'green' : 'red' }}>
+            {(revenues - exoenses).toFixed(2)} €
+          </p>
+        </div>
+       </div>
+       </div>
+       
+
       <ChartWrapper>
         <h2>Évolution des Revenus et Dépenses</h2>
         <Line data={lineChartData} />

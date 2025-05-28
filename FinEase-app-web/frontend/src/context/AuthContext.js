@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { loginUser, logoutUser, registerUser, getUserData } from '../services/api';
+import { loginUser , logoutUser, registerUser, getUserData } from '../services/api';
 
 export const AuthContext = createContext();
 
@@ -24,32 +24,20 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (email, password) => {
-    try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ email, password })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Échec de connexion");
-      }
-
-      const data = await response.json();
-      if (data?.user) {
-        setUser(data.user);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      return data.user;
-      } else{
-        throw new Error("Utilisateur non trouvé");
-      }
-    } catch (error) {
-      console.error("Erreur:", error.message);
-      throw error;
+  try {
+    const data = await loginUser(email, password);
+    if (!data?.user) {
+      throw new Error("Utilisateur non trouvé");
     }
-    };
+    
+    setUser(data.user);
+    localStorage.setItem('user', JSON.stringify(data.user)); // Correction ici
+    return data.user;
+  } catch (error) {
+    console.error("Erreur:", error.message);
+    throw error;
+  }
+};
 
   const register = async (userData) => {
     try {
