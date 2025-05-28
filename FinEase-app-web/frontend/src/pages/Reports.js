@@ -144,7 +144,7 @@ const Reports = () => {
         <div>
           <p style={{ fontWeight: 'bold' }}>Solde</p>
           <p style={{ color: revenues - expenses >= 0 ? 'green' : 'red' }}>
-            {(revenues - exoenses).toFixed(2)} €
+            {(revenues - expenses).toFixed(2)} €
           </p>
         </div>
        </div>
