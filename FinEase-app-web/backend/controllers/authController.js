@@ -100,7 +100,7 @@ exports.login = async (req, res) => {
 
     // Réponse avec informations utilisateur
     res.status(200).json({
-      message: "Connexion réussie",
+      message: "Connexion réussie", token,
       user: {
         id: user._id,
         name: user.name,
