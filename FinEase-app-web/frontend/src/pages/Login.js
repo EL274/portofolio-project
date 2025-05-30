@@ -38,7 +38,7 @@ const Button = styled.button`
   }
 `;
 // Définissez ErrorMessage comme composant styled 
-const ErrorMessage = styled.P`
+const ErrorMessage = styled.p`
   color: red;
   margin-top: 10 px;
   `;
