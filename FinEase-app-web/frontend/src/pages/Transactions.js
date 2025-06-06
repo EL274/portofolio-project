@@ -43,7 +43,7 @@ const ExportButtons = styled.div`
 //Fonctions d'export ajoutés
 const exportCSV = (data) => {
   const headers = "Catégorie, Montant,Type,Date\n";
-  const rows = data.map(t => `$(t.category},${t.amount},${t.type},${t.date}`).join("\n");
+  const rows = data.map(t => `${t.category},${t.amount},${t.type},${t.date}`).join("\n");
  const csv = headers + rows;
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = window.URL.createObjectURL(blob);
@@ -126,9 +126,9 @@ const Transactions = () => {
 
         {/* Liste des transactions filtrées */}
         <TransactionList>
-          {filteredTransactions.map((t) => (
+          {filteredTransactions.map((t, index) => (
             <TransactionItem
-              key={t.id}
+              key={t.id || `${t.category}-${t.amount}-${index}`}
               type={t.type}
               initial={{ opacity: 0, x: -100 }}
               animate={{ opacity: 1, x: 0 }}
