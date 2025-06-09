@@ -126,9 +126,9 @@ const Transactions = () => {
 
         {/* Liste des transactions filtrées */}
         <TransactionList>
-          {filteredTransactions.map((t, index) => (
+          {filteredTransactions.map((t ) => (
             <TransactionItem
-              key={t.id || `${t.category}-${t.amount}-${index}`}
+              key={t.id}
               type={t.type}
               initial={{ opacity: 0, x: -100 }}
               animate={{ opacity: 1, x: 0 }}

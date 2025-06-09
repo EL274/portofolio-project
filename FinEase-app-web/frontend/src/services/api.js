@@ -84,6 +84,17 @@ export const getUserData = async () => {
     }
 };
 
-// ... (vos autres fonctions API restent identiques)
+export const getTransactions = async () => {
+    try {
+        const response = await api.get("/transactions");
+        return response.data.map(t =>({
+            ...t,
+            id: t._id
+          }));
+    } catch (error) {
+        console.error("Erreur lors de la récupération des transactions :", error);
+        throw error;
+    }
+};
 
 export default api;
