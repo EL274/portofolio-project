@@ -15,7 +15,7 @@ const authenticateToken = require('../middleware/authenticateToken');
 // Enregistrement
 router.post('/register', [
   body('name')
-    .trim()
+    .trim() 
     .isLength({ min: 3 })
     .withMessage("Le nom doit avoir au moins 3 caractères"),
   body('email')
@@ -48,7 +48,7 @@ router.post('/forgot-password',
 
 //Réinitialisation du mot de passe
 
-router.post('/reset-password/:Token', [
+router.post('/reset-password/:token', [
   body('newPsassword').isLength({ min: 6 }).withMessage("le mot de passe doit avoir au moins 6 caractères")
 ], authController.resetPassword);
 

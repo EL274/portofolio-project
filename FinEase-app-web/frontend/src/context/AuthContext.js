@@ -10,19 +10,12 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        setLoading(false);
-        return;
-      }
-
       const userData = await getUserData();
       if (!userData) {
         throw new Error("Aucune donnée utilisateur reçue");
       }
       
       setUser(userData);
-      localStorage.setItem('user', JSON.stringify(userData));
     } catch (error) {
       console.error("Erreur d'authentification :", {
         message: error.message,
@@ -30,8 +23,6 @@ export const AuthProvider = ({ children }) => {
         status: error.response?.status
       });
       setUser(null);
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
     } finally {
       setLoading(false);
     }
@@ -44,22 +35,13 @@ export const AuthProvider = ({ children }) => {
     });
     setError(error.response?.data?.message || error.message);
     setUser(null);
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
   };
 
   const login = async (email, password) => {
     try {
       setLoading(true);
       const data = await loginUser(email, password);
-
-      if (!data?.user || !data?.token) {
-        throw new Error("Réponse de connexion invalide");
-      }
-      
       setUser(data.user);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      localStorage.setItem('token', data.token);
       setError(null);
       return data.user;
     } catch (error) {
@@ -74,13 +56,6 @@ export const AuthProvider = ({ children }) => {
     try {
       setLoading(true);
       const data = await registerUser(userData);
-      
-      if (!data?.token || !data?.user) {
-        throw new Error("Réponse d'inscription invalide");
-      }
-
-      localStorage.setItem('user', JSON.stringify(data.user));
-      localStorage.setItem('token', data.token);
       setUser(data.user);
       setError(null);
       return data.user;
@@ -94,15 +69,11 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      setLoading(true);
       await logoutUser();
     } catch (error) {
       console.error("Erreur lors de la déconnexion:", error.message);
     } finally {
-      localStorage.removeItem('user');
-      localStorage.removeItem('token');
       setUser(null);
-      setLoading(false);
     }
   };
 

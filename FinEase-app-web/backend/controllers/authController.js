@@ -44,6 +44,8 @@ exports.register = async (req, res) => {
     const user = new User({ name, email, password: hashedPassword });
     await user.save();
 
+    sendAuthToken(res, user);
+
     res.status(201).json({ 
       message: "Utilisateur créé avec succès",
       user: {

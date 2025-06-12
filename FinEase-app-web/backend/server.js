@@ -15,13 +15,15 @@ const connectDB = require('./db');
 
 const app = express();
 
+app.set('trust proxy', 1);// permet d'utiliser 
+
 //middlewares
 app.use(express.json());
 app.use(cookieParser());
 
 // Configuration de CORS
 app.use(cors({
-   origin: process.env.FRONTEND_URL || 'https://localhost:3000',
+   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
    credentials: true,
    methods: [ 'GET', 'POST', 'PUT', 'DELETE'],
    allowedHeaders: [ 'Content-Type', 'Authorization','X-Requested-With']

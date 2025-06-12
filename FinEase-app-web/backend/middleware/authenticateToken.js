@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const authenticateToken = (req, res, next) => {
   // Récupérer le token depuis les cookies ou les en-têtes
-  const token = req.cookies.token || req.headers['authorization']?.replace('Bearer ', '');
+  const token = req.cookies.token 
 
   // Vérifier si le token est manquant
   if (!token) {

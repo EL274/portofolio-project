@@ -72,7 +72,7 @@ const Settings = () => {
   return (
     <SettingsContainer>
       <h2>Paramètres</h2>
-      <p>Définissez votre salaire et votre budget mensuel.</p>
+      <p>Définissez votre salaire et votre budget mensuel</p>
 
       {/* SALAIRE MENSUEL */}
       <Input
