@@ -16,6 +16,7 @@ const connectDB = require('./db');
 const app = express();
 
 app.set('trust proxy', 1);// permet d'utiliser 
+connectDB();
 
 //middlewares
 app.use(express.json());

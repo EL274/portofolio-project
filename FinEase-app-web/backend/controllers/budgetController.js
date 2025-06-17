@@ -1,74 +1,240 @@
-const Budget = require('../models/Budget'); // Assurez-vous d'avoir un modèle Budget
+const Budget = require('../models/Budget');
+const Transaction = require('../models/Transaction');
+const Notification = require('../models/Notification');
+const { sendBudgetAlertEmail } = require('../services/emailService');
+const logger = require('../config/logger');
+const { budgetSchema, budgetUpdateSchema } = require('../validations/budgetValidation');
 
-// Créer un budget
-exports.createBudget = async (req, res) => {
+// Middleware de vérification de propriété
+const checkBudgetOwnership = async (req, res, next) => {
   try {
-    const { category, amount } = req.body;
-    const userId = req.user.id; // Récupérer l'ID de l'utilisateur connecté
+    const budget = await Budget.findOne({ _id: req.params.id, user: req.user.id });
+    if (!budget) {
+      return res.status(404).json({ 
+        success: false,
+        message: "Budget non trouvé ou non autorisé" 
+      });
+    }
+    req.budget = budget;
+    next();
+  } catch (error) {
+    logger.error('Erreur vérification propriété budget', error);
+    res.status(500).json({ 
+      success: false,
+      message: "Erreur de vérification d'autorisation" 
+    });
+  }
+};
 
-    const newBudget = new Budget({
-      user: userId,
-      category,
-      amount,
+// Créer ou mettre à jour le budget (version unifiée)
+exports.setOrUpdateBudget = async (req, res) => {
+  try {
+    // Validation des données
+    const { error } = budgetSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: error.details[0].message
+      });
+    }
+
+    const { totalBudget, salary, categoryBudgets } = req.body;
+    const userId = req.user.id;
+
+    // Vérification des montants positifs
+    if (totalBudget <= 0 || salary <= 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Les montants doivent être positifs"
+      });
+    }
+
+    let budget = await Budget.findOne({ user: userId });
+
+    if (!budget) {
+      budget = new Budget({ 
+        user: userId, 
+        totalBudget, 
+        salary, 
+        categoryBudgets 
+      });
+    } else {
+      budget.totalBudget = totalBudget;
+      budget.salary = salary;
+      budget.categoryBudgets = categoryBudgets;
+    }
+
+    await budget.save();
+    await checkBudgetExceeded(userId, req.user.email);
+
+    res.status(200).json({ 
+      success: true,
+      message: "Budget enregistré avec succès", 
+      data: budget 
+    });
+  } catch (error) {
+    logger.error("Erreur lors de la mise à jour du budget :", error);
+    res.status(500).json({ 
+      success: false,
+      message: "Erreur serveur lors de la gestion du budget" 
+    });
+  }
+};
+
+// Récupérer le budget de l'utilisateur avec analyse
+exports.getUserBudgetWithAnalysis = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const budget = await Budget.findOne({ user: userId });
+
+    if (!budget) {
+      return res.status(404).json({ 
+        success: false,
+        message: "Aucun budget trouvé pour cet utilisateur" 
+      });
+    }
+
+    // Récupérer les transactions pour analyse
+    const transactions = await Transaction.find({ 
+      userId,
+      date: { 
+        $gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+        $lt: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1)
+      }
     });
 
-    await newBudget.save();
-    res.status(201).json({ message: "Budget créé avec succès", budget: newBudget });
+    // Analyse par catégorie
+    const categoryAnalysis = budget.categoryBudgets.map(category => {
+      const categorySpending = transactions
+        .filter(t => t.type === 'dépense' && t.category === category.category)
+        .reduce((acc, t) => acc + t.amount, 0);
+
+      return {
+        category: category.category,
+        budgeted: category.amount,
+        spent: categorySpending,
+        remaining: category.amount - categorySpending,
+        percentage: (categorySpending / category.amount) * 100
+      };
+    });
+
+    res.status(200).json({
+      success: true,
+      data: {
+        budget,
+        analysis: {
+          categories: categoryAnalysis,
+          lastUpdated: budget.updatedAt
+        }
+      }
+    });
   } catch (error) {
-    console.error("Erreur lors de la création du budget :", error);
-    res.status(500).json({ message: "Erreur interne du serveur" });
+    logger.error("Erreur lors de la récupération du budget :", error);
+    res.status(500).json({ 
+      success: false,
+      message: "Erreur serveur lors de la récupération du budget" 
+    });
   }
 };
 
-// Récupérer tous les budgets de l'utilisateur
-exports.getBudgets = async (req, res) => {
-  try {
-    const userId = req.user.id; // Récupérer l'ID de l'utilisateur connecté
-    const budgets = await Budget.find({ user: userId });
-    res.status(200).json(budgets);
-  } catch (error) {
-    console.error("Erreur lors de la récupération des budgets :", error);
-    res.status(500).json({ message: "Erreur interne du serveur" });
+// Mettre à jour une catégorie spécifique
+exports.updateBudgetCategory = [
+  checkBudgetOwnership,
+  async (req, res) => {
+    try {
+      const { error } = budgetUpdateSchema.validate(req.body);
+      if (error) {
+        return res.status(400).json({
+          success: false,
+          message: error.details[0].message
+        });
+      }
+
+      const { category, amount } = req.body;
+      const budget = req.budget;
+
+      // Mise à jour de la catégorie
+      const categoryIndex = budget.categoryBudgets.findIndex(
+        cb => cb.category === category
+      );
+
+      if (categoryIndex === -1) {
+        budget.categoryBudgets.push({ category, amount });
+      } else {
+        budget.categoryBudgets[categoryIndex].amount = amount;
+      }
+
+      await budget.save();
+      await checkBudgetExceeded(budget.user, req.user.email);
+
+      res.status(200).json({
+        success: true,
+        message: "Catégorie mise à jour avec succès",
+        data: budget
+      });
+    } catch (error) {
+      logger.error("Erreur mise à jour catégorie budget :", error);
+      res.status(500).json({
+        success: false,
+        message: "Erreur serveur lors de la mise à jour de la catégorie"
+      });
+    }
   }
-};
+];
 
-// Mettre à jour un budget
-exports.updateBudget = async (req, res) => {
+// Vérification améliorée du dépassement de budget
+const checkBudgetExceeded = async (userId, email) => {
   try {
-    const { id } = req.params;
-    const { category, amount } = req.body;
+    const now = new Date();
+    const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    
+    const transactions = await Transaction.find({ 
+      userId,
+      date: { $gte: firstDayOfMonth, $lte: now },
+      type: 'dépense'
+    });
 
-    const updatedBudget = await Budget.findByIdAndUpdate(
-      id,
-      { category, amount },
-      { new: true }
-    );
+    const budget = await Budget.findOne({ user: userId });
+    if (!budget) return;
 
-    if (!updatedBudget) {
-      return res.status(404).json({ message: "Budget non trouvé" });
+    // Vérification du budget total
+    const totalDepenses = transactions.reduce((acc, t) => acc + t.amount, 0);
+    if (totalDepenses > budget.totalBudget) {
+      await Notification.create({
+        userId,
+        type: 'budget_exceeded',
+        message: `⚠️ Vous avez dépassé votre budget mensuel de ${totalDepenses - budget.totalBudget} € !`,
+        metadata: {
+          exceededAmount: totalDepenses - budget.totalBudget
+        }
+      });
+
+      await sendBudgetAlertEmail(
+        email, 
+        'Alerte de dépassement de budget',
+        `Vous avez dépassé votre budget mensuel de ${totalDepenses - budget.totalBudget} € !`
+      );
     }
 
-    res.status(200).json({ message: "Budget mis à jour avec succès", budget: updatedBudget });
-  } catch (error) {
-    console.error("Erreur lors de la mise à jour du budget :", error);
-    res.status(500).json({ message: "Erreur interne du serveur" });
-  }
-};
+    // Vérification par catégorie
+    for (const category of budget.categoryBudgets) {
+      const categorySpending = transactions
+        .filter(t => t.category === category.category)
+        .reduce((acc, t) => acc + t.amount, 0);
 
-// Supprimer un budget
-exports.deleteBudget = async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    const deletedBudget = await Budget.findByIdAndDelete(id);
-
-    if (!deletedBudget) {
-      return res.status(404).json({ message: "Budget non trouvé" });
+      if (categorySpending > category.amount) {
+        await Notification.create({
+          userId,
+          type: 'category_budget_exceeded',
+          message: `Vous avez dépassé votre budget pour ${category.category} de ${categorySpending - category.amount} € !`,
+          metadata: {
+            category: category.category,
+            exceededAmount: categorySpending - category.amount
+          }
+        });
+      }
     }
-
-    res.status(200).json({ message: "Budget supprimé avec succès" });
   } catch (error) {
-    console.error("Erreur lors de la suppression du budget :", error);
-    res.status(500).json({ message: "Erreur interne du serveur" });
+    logger.error("Erreur vérification dépassement budget :", error);
   }
 };

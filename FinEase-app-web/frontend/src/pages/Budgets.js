@@ -42,9 +42,36 @@ const Budgets = () => {
     setCategoryBudgets({ ...categoryBudgets, [category]: Number(value) });
   };
 
+  const handleSave = async () => {
+    try {
+      const formattedCategoryBudgets = Object.entries(categoryBudgets).map(([category, amount]) => ({
+        category,
+        amount,
+      }));
+      const budgetData = {
+        totalBudget, 
+        categoryBudgets: formattedCategoryBudgets
+      };
+      await updateBudget(budgetData);
+      alert("✅ Budget enregistré avec succès !");
+    } catch (error) {
+      console.error("Erreur enregistrement budget :", error);
+      alert("❌ Échec de l'enregistrement du budget.");
+    }
+  };
+
   return (
     <BudgetsContainer>
       <h2>Gérer vos Budgets</h2>
+      <div>
+        <label>Budget total</label>
+        <Input
+          type="number"
+          placeholder="Ex:2000"
+          value={totalBudget}
+          onChange={(e) => setTotalBudget(Number(e.target.value))}
+        />
+      </div>
       {["Alimentation", "Transport", "Logement", "Divertissement", "Santé"].map((category) => (
         <div key={category}>
           <label>{category}</label>

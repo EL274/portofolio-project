@@ -100,7 +100,7 @@ const Login = () => {
       <Button type="submit">Se connecter</Button>
       </form>
       <ForgotPasswordLink to="/forgot-password">
-      MOT de passe oublié?
+      Mot de passe oublié?
       </ForgotPasswordLink>
     </LoginContainer>
   );

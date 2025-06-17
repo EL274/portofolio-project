@@ -77,4 +77,35 @@ export const logoutUser = async () => {
 
 };
 
+export const updateBudget = async (budgetData) => {
+    try {
+        const response = await api.put("/budgets", budgetData);
+        return response.data;
+    } catch(error) {
+        console.error("Error lors de la mise à jour du budget :", error);
+        throw error;
+    }
+};
+
+export const getBudget = async() => {
+    try {
+        const response = await api.get('/budgets');
+        return response.data;
+    } catch (error) {
+        console.error("Erreur lors de la récupération budget:", error);
+        throw error;
+    }
+};
+
+export const updateBudgetCategory = async (categoryData) => {
+    try {
+        const response = await api.put("/budgets/category", categoryData);
+        return response.data;
+    } catch (error) {
+        console.error("Erreur lors de la mise à jour:", error);
+
+         throw error;
+    }
+}
+
 export default api;
