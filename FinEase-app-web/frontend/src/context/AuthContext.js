@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
       
       setUser(userData);
     } catch (error) {
-      console.error("Erreur d'authentification :", {
+      console.error("Erreur d'authentification :",{
         message: error.message,
         response: error.response?.data,
         status: error.response?.status
