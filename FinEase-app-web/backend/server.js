@@ -30,6 +30,7 @@ app.use(cors({
    allowedHeaders: [ 'Content-Type', 'Authorization','X-Requested-With']
 })); 
 app.use((req, res, next) => {
+   res.header("Access-Control-Allow-Origin", process.env.FRONTEND_URL || 'http://localhost:3000');
    res.header("Access-Control-Allow-Credentials", "true");
    next();
 }); 
