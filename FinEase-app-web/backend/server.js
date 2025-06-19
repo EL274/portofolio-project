@@ -28,7 +28,11 @@ app.use(cors({
    credentials: true,
    methods: [ 'GET', 'POST', 'PUT', 'DELETE'],
    allowedHeaders: [ 'Content-Type', 'Authorization','X-Requested-With']
-}));
+})); 
+app.use((req, res, next) => {
+   res.header("Access-Control-Allow-Credentials", "true");
+   next();
+}); 
 
 
 // Logging des requêtes (gère uniquement les erreurs en production)

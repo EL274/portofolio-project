@@ -26,7 +26,7 @@ export const getUserData = async () => {
     } catch (error) {
         console.error("Erreur de récupération utilisateur:",{
         message: error.message,
-        status: error.responses?.status,
+        status: error.response?.status,
         data: error.response?.data,
         });
         throw error;
