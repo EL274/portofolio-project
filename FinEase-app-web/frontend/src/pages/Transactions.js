@@ -73,6 +73,8 @@ const Transactions = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       const data = await getTransactions();
+      console.log("Transactions récupérées:", data);
+      
       setTransactions(data);
     };
 
@@ -126,9 +128,14 @@ const Transactions = () => {
 
         {/* Liste des transactions filtrées */}
         <TransactionList>
-          {filteredTransactions.map((t ) => (
+          {filteredTransactions
+           .filter(t => {
+            if (!t.id) console.error("Transaction sans ID:", t);
+            return !!t.id;
+           })
+            .map((t) => (
             <TransactionItem
-              key={t.id}
+              key={t.id || `fallback-${t.category}-${t.amount}`} //fallback key
               type={t.type}
               initial={{ opacity: 0, x: -100 }}
               animate={{ opacity: 1, x: 0 }}
@@ -139,7 +146,8 @@ const Transactions = () => {
               </span>
               <DeleteButton onClick={() => handleDelete(t.id)}>X</DeleteButton>
             </TransactionItem>
-          ))}
+          ))
+          }
         </TransactionList>
       </TransactionsContainer>
     </motion.div>

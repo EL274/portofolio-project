@@ -39,13 +39,27 @@ export const getUserData = async () => {
 export const getTransactions = async () => {
     try {
         const response = await api.get("/transactions");
-        return response.data.map(t =>({
+        const data = response.data;
+
+        if (!Array.isArray(data)) {
+        console.error("Erreur: la réponse des transactions n'est pas un tableau", data);
+        return[];
+
+        }
+
+        return data.map((t, index) =>({
             ...t,
-            id: t._id
+            id: t.id || `fallback-${index}`
           }));
     } catch (error) {
-        console.error("Erreur lors de la récupération des transactions :", error);
-        throw error;
+        console.error("Erreur lors de la récupération des transactions :", {
+           message: error.message,
+           status: error.response?.status,
+           data: error.response?.data,
+        });
+
+        throw error; 
+        
     }
 };
 

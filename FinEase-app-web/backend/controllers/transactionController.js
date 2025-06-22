@@ -27,6 +27,7 @@ exports.getTransactions = async (req, res) => {
   try {
     const userId = req.user.id; // Récupérer l'ID de l'utilisateur connecté
     const transactions = await Transaction.find({ user: userId });
+    console.log("Transactions récupérées :", transactions);
     res.status(200).json(transactions);
   } catch (error) {
     console.error("Erreur lors de la récupération des transactions :", error);

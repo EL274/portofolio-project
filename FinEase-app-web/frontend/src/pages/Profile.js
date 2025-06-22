@@ -32,7 +32,7 @@ const Input = styled.input`
 const Button = styled.button`
   width: 100%;
   padding: 10px;
-  background: ${(props) => props.bg || "#007BFF"};
+  background: ${(props) => props.$bg || "#007BFF"};
   color: white;
   border: none;
   cursor: pointer;
@@ -40,7 +40,7 @@ const Button = styled.button`
   transition: 0.3s;
 
   &:hover {
-    background: ${(props) => props.hover || "#0056b3"};
+    background: ${(props) => props.$hover || "#0056b3"};
   }
 `;
 
