@@ -47,10 +47,20 @@ export const getTransactions = async () => {
 
         }
 
-        return data.map((t, index) =>({
-            ...t,
-            id: t.id || `fallback-${index}`
-          }));
+        return data.map(t =>{
+            if (!t._id) {
+                console.warn("Transaction sans ID détectée", t);
+                return {
+                    ...t,
+                    id: `temp-${crypto.randomUUID()}`
+                };
+            }
+            return {
+                ...t,
+                id: t._id.toString(),
+                _id: undefined
+            };
+          });
     } catch (error) {
         console.error("Erreur lors de la récupération des transactions :", {
            message: error.message,

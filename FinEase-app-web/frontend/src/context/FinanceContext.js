@@ -5,11 +5,30 @@ export const FinanceContext = createContext();
 
 export const FinanceProvider = ({ children }) => {
   const [transactions, setTransactions] = useState([]);
-  const [budget, setBudget] = useState(0); // Nouveau : Gestion du budget
-  const [salary, setSalary] = useState(0); // Stocker le salaire de l'utilisateur
-  const [categoryBudgets, setCategoryBudgets] = useState({}); // Budgets par catégorie
+  const [budget, setBudget] = useState(0);
+  const [salary, setSalary] = useState(0);
+  const [categoryBudgets, setCategoryBudgets] = useState({});
 
-  // Vérifier si les dépenses dépassent le budget
+  // Nouvelle fonction pour éviter les doublons
+  const addTransactions = (newTransactions) => {
+    setTransactions(prev => {
+      // Filtre les transactions sans ID et supprime les doublons
+      const uniqueTransactions = [];
+      const ids = new Set();
+
+      [...prev, ...newTransactions].forEach(t => {
+        const id = t.id || t._id;
+        if (id && !ids.has(id)) {
+          ids.add(id);
+          uniqueTransactions.push(t);
+        }
+      });
+
+      return uniqueTransactions;
+    });
+  };
+
+  // Vérification du budget (votre code original inchangé)
   useEffect(() => {
     const totalDepenses = transactions
       .filter(t => t.type === 'dépense')
@@ -20,6 +39,7 @@ export const FinanceProvider = ({ children }) => {
     }
   }, [transactions, budget]);
 
+  // Vérification des budgets par catégorie (votre code original inchangé)
   useEffect(() => {
     transactions.forEach((t) => {
       if (categoryBudgets[t.category] && t.type === 'dépense') {
@@ -36,7 +56,15 @@ export const FinanceProvider = ({ children }) => {
 
   return (
     <FinanceContext.Provider value={{ 
-        transactions, setTransactions, budget, setBudget, salary, setSalary,categoryBudgets, setCategoryBudgets }}>
+      transactions,
+      setTransactions: addTransactions, // On utilise maintenant addTransactions
+      budget, 
+      setBudget, 
+      salary, 
+      setSalary,
+      categoryBudgets, 
+      setCategoryBudgets 
+    }}>
       {children}
     </FinanceContext.Provider>
   );

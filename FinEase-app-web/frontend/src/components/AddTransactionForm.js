@@ -46,7 +46,7 @@ const Button = styled.button`
 `;
 
 const AddTransactionForm = () => {
-  const { transactions, setTransactions } = useContext(FinanceContext);
+  const { setTransactions } = useContext(FinanceContext);
   const [type, setType] = useState('revenu');
   const [category, setCategory] = useState('');
   const [amount, setAmount] = useState('');
@@ -57,13 +57,16 @@ const AddTransactionForm = () => {
     if (!category || !amount || !date) return alert("Tous les champs sont obligatoires");
 
     const newTransaction = { type, category, amount: parseFloat(amount), date };
-
-    const addedTransaction = await addTransaction(newTransaction);
-    setTransactions([...transactions, addedTransaction]);
-
-    setCategory('');
-    setAmount('');
-    setDate('');
+    try {
+      const addedTransaction = await addTransaction(newTransaction);
+      setTransactions([addedTransaction]);
+      setCategory('');
+      setAmount('');
+      setDate('');
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de la transaction:", error);
+      alert("Erreur lors de l'ajout de la transaction");
+    }
   };
 
   return (

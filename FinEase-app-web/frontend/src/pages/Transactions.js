@@ -135,7 +135,7 @@ const Transactions = () => {
            })
             .map((t) => (
             <TransactionItem
-              key={t.id || `fallback-${t.category}-${t.amount}`} //fallback key
+              key={t.id || `${t.category}-${t.amount}-${t.date}-${t.type}`} 
               type={t.type}
               initial={{ opacity: 0, x: -100 }}
               animate={{ opacity: 1, x: 0 }}
