@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { FinanceContext } from '../context/FinanceContext'; // On extrait le contexte Finance
+import { FinanceContext } from '../context/FinanceContext';
 import { Link } from 'react-router-dom';
 import { Bar } from 'react-chartjs-2';
 import 'chart.js/auto';
@@ -54,39 +54,88 @@ const BudgetAlert = styled.p`
   font-weight: bold;
 `;
 
+const EmptyMessage = styled.p`
+  color: #666;
+  font-style: italic;
+  margin: 20px 0;
+`;
+
+// Déclaration de chartOptions (ajouté)
+const chartOptions = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    tooltip: {
+      callbacks: {
+        label: function(context) {
+          return `${context.dataset.label}: ${context.raw} €`;
+        }
+      }
+    }
+  },
+  scales: {
+    y: {
+      beginAtZero: true,
+      ticks: {
+        callback: function(value) {
+          return `${value} €`;
+        }
+      }
+    }
+  }
+};
+
 const Dashboard = () => {
-  // Ajout de 'budget' depuis le contexte Finance pour l'utiliser dans l'affichage de l'alerte
   const { transactions, setTransactions, budget } = useContext(FinanceContext);
-  const [chartData, setChartData] = useState({});
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [{
+      label: 'Montant (€)',
+      data: [],
+      backgroundColor: '#ffcc00',
+    }]
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTransactions = async () => {
-      const data = await getTransactions();
-      setTransactions(data);
+      try {
+        const transactionsData = await getTransactions();
+        
+        if (!Array.isArray(transactionsData)) {
+          console.error("Les données reçues ne sont pas un tableau:", transactionsData);
+          setTransactions([]);
+          return;
+        }
 
-      // Création des données pour le graphique
-      const categories = data.map((t) => t.category);
-      const amounts = data.map((t) => t.amount);
+        setTransactions(transactionsData);
 
-      setChartData({
-        labels: categories,
-        datasets: [
-          {
-            label: 'Montant (€)',
-            data: amounts,
-            backgroundColor: '#ffcc00',
-          },
-        ],
-      });
+        if (transactionsData.length > 0) {
+          const categories = transactionsData.map((t) => t.category);
+          const amounts = transactionsData.map((t) => t.amount);
 
-      setLoading(false);
+          setChartData({
+            labels: categories,
+            datasets: [{
+              label: 'Montant (€)',
+              data: amounts,
+              backgroundColor: '#ffcc00',
+            }]
+          });
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération des transactions:", error);
+        setTransactions([]);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchTransactions();
-  }, [setTransactions]); // Ajout de setTransactions comme dépendance pour ESLint
+  }, [setTransactions]);
 
-  // Calcul des totaux
   const totalRevenus = transactions
     .filter(t => t.type === 'revenu')
     .reduce((acc, t) => acc + t.amount, 0);
@@ -105,9 +154,10 @@ const Dashboard = () => {
       <DashboardContainer>
         <h1>Tableau de Bord</h1>
 
-        {/* Alerte affichée si le total des dépenses dépasse le budget */}
         {budget > 0 && totalDepenses > budget && (
-          <BudgetAlert>⚠️ Vous avez dépassé votre budget mensuel !</BudgetAlert>
+          <BudgetAlert>
+            ⚠️ Vous avez dépassé votre budget mensuel de {totalDepenses - budget} €
+          </BudgetAlert>
         )}
 
         <Summary>
@@ -118,7 +168,7 @@ const Dashboard = () => {
             transition={{ duration: 0.5 }}
           >
             <h3>Solde Actuel</h3>
-            <p>{solde} €</p>
+            <p>{solde.toFixed(2)} €</p>
           </Card>
 
           <Card 
@@ -128,7 +178,7 @@ const Dashboard = () => {
             transition={{ duration: 0.7 }}
           >
             <h3>Revenus</h3>
-            <p>{totalRevenus} €</p>
+            <p>{totalRevenus.toFixed(2)} €</p>
           </Card>
 
           <Card 
@@ -138,22 +188,24 @@ const Dashboard = () => {
             transition={{ duration: 0.9 }}
           >
             <h3>Dépenses</h3>
-            <p>{totalDepenses} €</p>
+            <p>{totalDepenses.toFixed(2)} €</p>
           </Card>
         </Summary>
 
-        <h2>Transactions Récentes</h2>
+        <h2>Répartition des Dépenses</h2>
 
-        {loading ? (
-          <p>Chargement des données...</p>
-        ) : (
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }} 
-            animate={{ opacity: 1, scale: 1 }} 
+        {!loading && transactions.length > 0 ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <Bar data={chartData} />
+            <Bar data={chartData} options={chartOptions} />
           </motion.div>
+        ) : (
+          <EmptyMessage>
+            {loading ? 'Chargement des données...' : 'Aucune transaction à afficher'}
+          </EmptyMessage>
         )}
 
         <TransactionsLink to="/transactions">

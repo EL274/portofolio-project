@@ -41,13 +41,19 @@ export const getTransactions = async () => {
         const response = await api.get("/transactions");
         const data = response.data;
 
-        if (!Array.isArray(data)) {
-        console.error("Erreur: la réponse des transactions n'est pas un tableau", data);
-        return[];
-
+        if (!data || typeof data !==  'object') {
+            console.error("Format de réponse inattendu", data);
+            return [];
         }
 
-        return data.map(t =>{
+        const transactionsData = data.transactions || [];
+
+        if (!Array.isArray(transactionsData)) {
+            console.error("Erreur: la réponse des transactions n'est pas un tableau", transactionsData);
+            return [];
+        }
+
+        return transactionsData.map(t => {
             if (!t._id) {
                 console.warn("Transaction sans ID détectée", t);
                 return {
@@ -62,14 +68,13 @@ export const getTransactions = async () => {
             };
           });
     } catch (error) {
-        console.error("Erreur lors de la récupération des transactions :", {
-           message: error.message,
+        console.error("Erreur API détaillée:", {
+           url: error.config?.url,
            status: error.response?.status,
            data: error.response?.data,
         });
 
-        throw error; 
-        
+        return []; 
     }
 };
 

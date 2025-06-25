@@ -59,11 +59,23 @@ const Profile = () => {
 
   const handleUpdate = async () => {
     try {
-      const updatedUser = await updateProfile({ name, email, password });
+      setError('');
+      if (!name || !email) {
+        return setError("Le Nom et l'email sont obligatoires");
+      }
+
+      const updatedUser = await updateProfile({ name,
+         email,
+         password: password || undefined
+        });
+
       setUser(updatedUser);
       alert("Profil mis à jour avec succès !");
+      setPassword('');
     } catch (err) {
-      setError("Erreur lors de la mise à jour du profil.");
+      const errorMsg = err.response?.data?.message || err.message;
+      console.error("Erreur API:", errorMsg);
+      setError(errorMsg ||"Erreur lors de la mise à jour du profil");
     }
   };
 
@@ -80,12 +92,28 @@ const Profile = () => {
 
       {error && <ErrorMessage>{error}</ErrorMessage>}
 
-      <Input type="text" placeholder="Nom" value={name} onChange={(e) => setName(e.target.value)} />
-      <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <Input type="password" placeholder="Nouveau mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} />
+      <Input 
+      type="text" 
+      placeholder="Nom" 
+      value={name} 
+      onChange={(e) => setName(e.target.value)} 
+      />
+      <Input 
+      type="email" 
+      placeholder="Email" 
+      value={email} onChange={(e) => setEmail(e.target.value)} 
+      />
+      <Input 
+      type="password" 
+      placeholder="Nouveau mot de passe" 
+      value={password} 
+      onChange={(e) => setPassword(e.target.value)} 
+      />
 
       <Button onClick={handleUpdate}>Mettre à jour</Button>
-      <Button bg="#dc3545" hover="#a71d2a" onClick={handleLogout}>Déconnexion</Button>
+      <Button $bg="#dc3545" $hover="#a71d2a" onClick={handleLogout}>
+        Déconnexion
+      </Button>
     </ProfileContainer>
   );
 };

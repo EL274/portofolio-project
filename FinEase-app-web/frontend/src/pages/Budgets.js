@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 import { FinanceContext } from '../context/FinanceContext';
+import { updateBudget } from '../services/api'
 
 const BudgetsContainer = styled.div`
   max-width: 500px;
@@ -36,27 +37,37 @@ const Button = styled.button`
 `;
 
 const Budgets = () => {
-  const { categoryBudgets, setCategoryBudgets } = useContext(FinanceContext);
+  const {
+    budget: totalBudget,
+    setBudget: setTotalBudget,
+    categoryBudgets,
+    setCategoryBudgets
+  } = useContext(FinanceContext);
 
   const handleCategoryChange = (category, value) => {
-    setCategoryBudgets({ ...categoryBudgets, [category]: Number(value) });
+    setCategoryBudgets({ 
+      ...categoryBudgets, 
+      [category]: Number(value) || 0 
+    });
   };
 
   const handleSave = async () => {
     try {
-      const formattedCategoryBudgets = Object.entries(categoryBudgets).map(([category, amount]) => ({
+      const formattedCategoryBudgets = Object.entries(categoryBudgets)
+      .filter(([_, amount]) => amount > 0)
+      .map(([category, amount]) => ({
         category,
         amount,
       }));
-      const budgetData = {
-        totalBudget, 
-        categoryBudgets: formattedCategoryBudgets
-      };
-      await updateBudget(budgetData);
-      alert("✅ Budget enregistré avec succès !");
+
+      await updateBudget({
+            totalBudget,
+            categoryBudgets: formattedCategoryBudgets
+          });
+      alert("Budget enregistré avec succès !");
     } catch (error) {
       console.error("Erreur enregistrement budget :", error);
-      alert("❌ Échec de l'enregistrement du budget.");
+      alert(" Échec de l'enregistrement du budget.");
     }
   };
 
@@ -75,10 +86,16 @@ const Budgets = () => {
       {["Alimentation", "Transport", "Logement", "Divertissement", "Santé"].map((category) => (
         <div key={category}>
           <label>{category}</label>
-          <Input type="number" placeholder={`Budget pour ${category}`} onChange={(e) => handleCategoryChange(category, e.target.value)} />
+          <Input 
+          type="number" 
+          placeholder={`Budget pour ${category}`}
+          value= {categoryBudgets[category] || ''} 
+          onChange={(e) => handleCategoryChange(category, e.target.value)}
+          min="0"
+          />
         </div>
       ))}
-      <Button>Enregistrer</Button>
+      <Button onClick={handleSave}>Enregistrer</Button>
     </BudgetsContainer>
   );
 };
